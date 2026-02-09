@@ -1,1123 +1,635 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PricePoint | How Algorithms Set Your Prices</title>
-  <meta name="description" content="Discover how algorithmic pricing works, why you might pay different prices than others, and what it means for consumers. An educational project by Team PricePoint.">
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
-  <style>
-    :root {
-      --bg-primary: #0B0F19;
-      --bg-secondary: #111827;
-      --bg-card: #1A2235;
-      --bg-card-hover: #1F2A40;
-      --cyan: #06D6A0;
-      --cyan-dim: rgba(6, 214, 160, 0.15);
-      --coral: #EF476F;
-      --coral-dim: rgba(239, 71, 111, 0.15);
-      --amber: #FFD166;
-      --amber-dim: rgba(255, 209, 102, 0.15);
-      --blue: #118AB2;
-      --blue-dim: rgba(17, 138, 178, 0.15);
-      --text-primary: #E8ECF4;
-      --text-secondary: #8B95A8;
-      --text-dim: #5A6378;
-      --border: rgba(255,255,255,0.06);
-      --glow: 0 0 30px rgba(6, 214, 160, 0.1);
-    }
-
-    /* Animations */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 1; }
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-    @keyframes scanline {
-      0% { transform: translateY(-100%); }
-      100% { transform: translateY(100vh); }
-    }
-    @keyframes ticker {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    .fade-in {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
-    .fade-in-delay-1 { transition-delay: 0.1s; }
-    .fade-in-delay-2 { transition-delay: 0.2s; }
-    .fade-in-delay-3 { transition-delay: 0.3s; }
-    .fade-in-delay-4 { transition-delay: 0.4s; }
-    .fade-in-delay-5 { transition-delay: 0.5s; }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Outfit', sans-serif;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.7;
-      font-weight: 400;
-      overflow-x: hidden;
-    }
-
-    /* Scanline overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(255,255,255,0.008) 2px,
-        rgba(255,255,255,0.008) 4px
-      );
-      pointer-events: none;
-      z-index: 1000;
-    }
-
-    h1, h2, h3, h4 {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      color: var(--text-primary);
-      letter-spacing: -0.02em;
-    }
-
-    code, .mono {
-      font-family: 'Space Mono', monospace;
-    }
-
-    /* ── Navigation ── */
-    .top-bar {
-      background: rgba(6, 214, 160, 0.05);
-      border-bottom: 1px solid var(--border);
-      height: 36px;
-      display: flex;
-      align-items: center;
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 101;
-    }
-
-    .top-bar-container {
-      width: 100%; max-width: 1200px;
-      margin: 0 auto; padding: 0 2rem;
-      display: flex; justify-content: center;
-      align-items: center; gap: 0.5rem;
-    }
-
-    .top-bar-item {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      font-family: 'Space Mono', monospace;
-      font-size: 0.6rem; font-weight: 400;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--cyan); text-decoration: none; opacity: 0.7;
-      transition: opacity 0.3s ease;
-    }
-    .top-bar-item:hover { opacity: 1; }
-    .top-bar-divider { color: var(--text-dim); opacity: 0.3; margin: 0 0.75rem; }
-
-    nav {
-      position: fixed; top: 36px; left: 0; right: 0;
-      height: 64px; z-index: 100;
-      background: rgba(11, 15, 25, 0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      transition: all 0.3s ease;
-    }
-    nav.scrolled {
-      background: rgba(11, 15, 25, 0.95);
-      box-shadow: 0 4px 30px rgba(0,0,0,0.3);
-    }
-
-    .nav-container {
-      max-width: 1200px; height: 100%;
-      margin: 0 auto; padding: 0 2rem;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-
-    .logo {
-      display: flex; align-items: center; gap: 0.6rem;
-      text-decoration: none;
-    }
-    .logo-icon {
-      width: 32px; height: 32px;
-      background: var(--cyan);
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Space Mono', monospace;
-      font-weight: 700; font-size: 0.9rem;
-      color: var(--bg-primary);
-    }
-    .logo-text {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.15rem; font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-    .logo-text span:first-child { color: var(--text-primary); }
-    .logo-text span:last-child { color: var(--cyan); }
-
-    .nav-links {
-      display: flex; align-items: center;
-      gap: 2rem; list-style: none;
-    }
-    .nav-links a {
-      font-size: 0.78rem; font-weight: 500;
-      letter-spacing: 0.04em; text-transform: uppercase;
-      color: var(--text-secondary); text-decoration: none;
-      position: relative; padding: 0.5rem 0;
-      transition: color 0.3s ease;
-    }
-    .nav-links a:hover { color: var(--cyan); }
-    .nav-links a::after {
-      content: ''; position: absolute;
-      bottom: 0; left: 0; width: 0; height: 2px;
-      background: var(--cyan);
-      transition: width 0.3s ease;
-    }
-    .nav-links a:hover::after { width: 100%; }
-
-    .nav-cta {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem; font-weight: 700;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      background: var(--cyan); color: var(--bg-primary);
-      padding: 0.6rem 1.2rem; text-decoration: none;
-      border-radius: 4px;
-      transition: all 0.3s ease;
-    }
-    .nav-cta:hover {
-      background: #05c493;
-      box-shadow: 0 0 20px rgba(6, 214, 160, 0.3);
-    }
-
-    /* Mobile */
-    .mobile-toggle {
-      display: none; flex-direction: column; gap: 5px;
-      background: none; border: none; cursor: pointer; padding: 5px;
-    }
-    .mobile-toggle span {
-      width: 22px; height: 2px;
-      background: var(--text-primary);
-      transition: all 0.3s ease;
-    }
-
-    /* ── Hero ── */
-    .hero {
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      padding: 140px 2rem 4rem;
-      position: relative; overflow: hidden;
-    }
-
-    .hero-bg {
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: 
-        radial-gradient(ellipse at 20% 50%, rgba(6, 214, 160, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 30%, rgba(17, 138, 178, 0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 80%, rgba(239, 71, 111, 0.04) 0%, transparent 50%);
-    }
-
-    /* Grid pattern */
-    .hero::after {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background-image: 
-        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-    }
-
-    .hero-content {
-      max-width: 900px; text-align: center;
-      position: relative; z-index: 1;
-    }
-
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 0.75rem;
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--cyan); margin-bottom: 2rem;
-      animation: fadeUp 0.8s ease forwards;
-    }
-    .hero-badge::before, .hero-badge::after {
-      content: ''; width: 30px; height: 1px; background: var(--cyan); opacity: 0.5;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.8rem, 6vw, 4.5rem);
-      font-weight: 700; line-height: 1.1;
-      margin-bottom: 1.5rem;
-      animation: fadeUp 0.8s ease 0.1s forwards;
-      opacity: 0;
-    }
-    .hero h1 em {
-      font-style: normal;
-      background: linear-gradient(135deg, var(--cyan), var(--blue));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-subtitle {
-      font-size: 1.15rem; color: var(--text-secondary);
-      max-width: 620px; margin: 0 auto 3rem;
-      font-weight: 300; line-height: 1.8;
-      animation: fadeUp 0.8s ease 0.2s forwards; opacity: 0;
-    }
-
-    .hero-ctas {
-      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
-      animation: fadeUp 0.8s ease 0.3s forwards; opacity: 0;
-    }
-
-    .btn-primary {
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.8rem; font-weight: 600;
-      letter-spacing: 0.06em; text-transform: uppercase;
-      background: var(--cyan); color: var(--bg-primary);
-      padding: 1rem 2.2rem; text-decoration: none;
-      border-radius: 4px; border: 1px solid var(--cyan);
-      transition: all 0.3s ease;
-      display: inline-flex; align-items: center; gap: 0.6rem;
-    }
-    .btn-primary:hover {
-      background: transparent; color: var(--cyan);
-      box-shadow: var(--glow);
-    }
-
-    .btn-secondary {
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.8rem; font-weight: 600;
-      letter-spacing: 0.06em; text-transform: uppercase;
-      background: transparent; color: var(--text-primary);
-      padding: 1rem 2.2rem; text-decoration: none;
-      border-radius: 4px; border: 1px solid var(--border);
-      transition: all 0.3s ease;
-      display: inline-flex; align-items: center; gap: 0.6rem;
-    }
-    .btn-secondary:hover {
-      border-color: var(--cyan); color: var(--cyan);
-    }
-
-    /* ── Stats Ticker ── */
-    .stats-bar {
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 2.5rem 2rem;
-      overflow: hidden;
-    }
-
-    .stats-container {
-      max-width: 1100px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 2rem; text-align: center;
-    }
-
-    .stat-item { position: relative; }
-    .stat-item:not(:last-child)::after {
-      content: ''; position: absolute;
-      right: -1rem; top: 20%; height: 60%;
-      width: 1px; background: var(--border);
-    }
-
-    .stat-number {
-      font-family: 'Space Mono', monospace;
-      font-size: 2.2rem; font-weight: 700;
-      color: var(--cyan); display: block; margin-bottom: 0.3rem;
-    }
-    .stat-label {
-      font-size: 0.72rem; font-weight: 500;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--text-secondary);
-    }
-
-    /* ── How It Works ── */
-    .how-it-works {
-      padding: 7rem 2rem;
-      background: var(--bg-primary);
-      position: relative;
-    }
-
-    .section-header {
-      text-align: center; margin-bottom: 4rem;
-    }
-    .section-badge {
-      display: inline-flex; align-items: center; gap: 0.75rem;
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--cyan); margin-bottom: 1.2rem;
-    }
-    .section-badge::before, .section-badge::after {
-      content: ''; width: 20px; height: 1px; background: var(--cyan); opacity: 0.5;
-    }
-    .section-header h2 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      margin-bottom: 1rem;
-    }
-    .section-header p {
-      color: var(--text-secondary); max-width: 600px; margin: 0 auto;
-      font-weight: 300;
-    }
-
-    .steps-container {
-      max-width: 1000px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
-    }
-
-    .step {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 2.5rem 2rem;
-      text-align: center;
-      position: relative;
-      transition: all 0.4s ease;
-    }
-    .step:hover {
-      border-color: rgba(6, 214, 160, 0.2);
-      transform: translateY(-4px);
-      box-shadow: var(--glow);
-    }
-
-    .step-number {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: var(--cyan-dim); color: var(--cyan);
-      font-family: 'Space Mono', monospace;
-      font-size: 1.1rem; font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 1.5rem;
-    }
-    .step h3 {
-      font-size: 1.2rem; margin-bottom: 0.8rem;
-    }
-    .step p {
-      font-size: 0.92rem; color: var(--text-secondary);
-      line-height: 1.7;
-    }
-
-    /* ── Industry Case Studies ── */
-    .case-studies {
-      padding: 7rem 2rem;
-      background: var(--bg-secondary);
-    }
-
-    .cases-grid {
-      max-width: 1200px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-
-    .case-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 2.5rem 2rem;
-      text-decoration: none; color: inherit;
-      display: block; position: relative; overflow: hidden;
-      transition: all 0.4s ease;
-    }
-    .case-card::before {
-      content: ''; position: absolute;
-      top: 0; left: 0; width: 100%; height: 3px;
-      background: linear-gradient(90deg, var(--cyan), var(--blue));
-      transform: scaleX(0); transform-origin: left;
-      transition: transform 0.4s ease;
-    }
-    .case-card:hover::before { transform: scaleX(1); }
-    .case-card:hover {
-      border-color: rgba(6, 214, 160, 0.15);
-      transform: translateY(-4px);
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    }
-
-    .case-icon {
-      width: 48px; height: 48px; margin-bottom: 1.2rem;
-      border-radius: 8px; display: flex;
-      align-items: center; justify-content: center;
-      font-size: 1.5rem;
-    }
-    .case-icon.amazon { background: var(--amber-dim); }
-    .case-icon.uber { background: var(--coral-dim); }
-    .case-icon.airlines { background: var(--blue-dim); }
-    .case-icon.ecommerce { background: var(--cyan-dim); }
-    .case-icon.hotels { background: var(--amber-dim); }
-    .case-icon.insurance { background: var(--coral-dim); }
-
-    .case-card h3 {
-      font-size: 1.25rem; margin-bottom: 0.8rem;
-    }
-    .case-card p {
-      font-size: 0.92rem; color: var(--text-secondary); line-height: 1.7;
-      margin-bottom: 1.2rem;
-    }
-    .card-link {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem; font-weight: 700;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--cyan);
-      transition: color 0.3s ease;
-    }
-    .case-card:hover .card-link { color: var(--text-primary); }
-
-    .case-card.featured {
-      background: linear-gradient(135deg, rgba(6, 214, 160, 0.08), rgba(17, 138, 178, 0.05));
-      border-color: rgba(6, 214, 160, 0.2);
-    }
-
-    /* ── Price Comparison Demo Teaser ── */
-    .demo-teaser {
-      padding: 6rem 2rem;
-      background: var(--bg-primary);
-      text-align: center;
-      position: relative;
-    }
-    .demo-teaser::before {
-      content: ''; position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(ellipse at center, rgba(6, 214, 160, 0.04) 0%, transparent 60%);
-    }
-
-    .demo-container {
-      max-width: 700px; margin: 0 auto;
-      position: relative; z-index: 1;
-    }
-
-    .demo-preview {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 3rem 2rem;
-      margin-top: 3rem;
-    }
-
-    .price-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .price-row:last-child { border-bottom: none; }
-
-    .price-label {
-      display: flex; align-items: center; gap: 0.8rem;
-    }
-    .price-avatar {
-      width: 36px; height: 36px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem;
-    }
-    .price-avatar.a { background: var(--cyan-dim); }
-    .price-avatar.b { background: var(--coral-dim); }
-    .price-avatar.c { background: var(--amber-dim); }
-
-    .price-name {
-      font-weight: 500; font-size: 0.95rem;
-    }
-    .price-detail {
-      font-size: 0.75rem; color: var(--text-dim);
-    }
-    .price-amount {
-      font-family: 'Space Mono', monospace;
-      font-weight: 700; font-size: 1.3rem;
-    }
-    .price-amount.low { color: var(--cyan); }
-    .price-amount.mid { color: var(--amber); }
-    .price-amount.high { color: var(--coral); }
-
-    /* ── Ethics Section ── */
-    .ethics {
-      padding: 7rem 2rem;
-      background: var(--bg-secondary);
-    }
-
-    .ethics-grid {
-      max-width: 1000px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(2, 1fr);
-      gap: 2rem;
-    }
-
-    .ethics-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 2.5rem;
-      transition: all 0.3s ease;
-    }
-    .ethics-card:hover {
-      border-color: rgba(6, 214, 160, 0.15);
-    }
-
-    .ethics-icon {
-      font-size: 1.8rem; margin-bottom: 1rem;
-    }
-    .ethics-card h3 {
-      font-size: 1.15rem; margin-bottom: 0.8rem;
-    }
-    .ethics-card p {
-      font-size: 0.92rem; color: var(--text-secondary); line-height: 1.7;
-    }
-
-    /* ── FAQ ── */
-    .faq {
-      padding: 7rem 2rem;
-      background: var(--bg-primary);
-    }
-
-    .faq-container { max-width: 800px; margin: 0 auto; }
-
-    .faq-item {
-      border-bottom: 1px solid var(--border);
-    }
-    .faq-item:first-child { border-top: 1px solid var(--border); }
-
-    .faq-question {
-      width: 100%; display: flex;
-      justify-content: space-between; align-items: center;
-      padding: 1.5rem 0; background: none; border: none;
-      cursor: pointer; text-align: left;
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.05rem; font-weight: 600;
-      color: var(--text-primary);
-      transition: color 0.3s ease;
-    }
-    .faq-question:hover { color: var(--cyan); }
-
-    .faq-arrow {
-      color: var(--cyan);
-      transition: transform 0.3s ease;
-      flex-shrink: 0;
-    }
-    .faq-question[aria-expanded="true"] .faq-arrow {
-      transform: rotate(180deg);
-    }
-
-    .faq-answer {
-      max-height: 0; overflow: hidden;
-      transition: max-height 0.4s ease, padding 0.4s ease;
-    }
-    .faq-answer.open {
-      max-height: 300px; padding-bottom: 1.5rem;
-    }
-    .faq-answer p {
-      font-size: 0.92rem; color: var(--text-secondary); line-height: 1.8;
-    }
-
-    /* ── Footer ── */
-    footer {
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border);
-      padding: 4rem 2rem 2rem;
-    }
-
-    .footer-container { max-width: 1200px; margin: 0 auto; }
-
-    .footer-top {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
-      gap: 3rem; margin-bottom: 3rem;
-    }
-
-    .footer-brand .logo-text {
-      font-size: 1.1rem; margin-bottom: 0.8rem;
-    }
-    .footer-tagline {
-      font-size: 0.85rem; color: var(--text-secondary);
-      line-height: 1.7; margin-bottom: 1rem;
-    }
-
-    .footer-column h4 {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem; font-weight: 700;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--cyan); margin-bottom: 1.2rem;
-    }
-
-    .footer-column ul {
-      list-style: none;
-    }
-    .footer-column ul li { margin-bottom: 0.5rem; }
-    .footer-column ul a {
-      font-size: 0.88rem; color: var(--text-secondary);
-      text-decoration: none; transition: color 0.3s ease;
-    }
-    .footer-column ul a:hover { color: var(--cyan); }
-
-    .footer-bottom {
-      border-top: 1px solid var(--border);
-      padding-top: 1.5rem;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .footer-bottom p {
-      font-size: 0.75rem; color: var(--text-dim);
-    }
-    .footer-legal {
-      display: flex; gap: 1.5rem;
-    }
-    .footer-legal a {
-      font-size: 0.75rem; color: var(--text-dim);
-      text-decoration: none;
-    }
-    .footer-legal a:hover { color: var(--cyan); }
-
-    /* ── Back to top ── */
-    .back-to-top {
-      position: fixed; bottom: 2rem; right: 2rem;
-      width: 42px; height: 42px;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 6px; color: var(--cyan);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; opacity: 0; transform: translateY(10px);
-      transition: all 0.3s ease; z-index: 99;
-    }
-    .back-to-top.visible {
-      opacity: 1; transform: translateY(0);
-    }
-    .back-to-top:hover {
-      border-color: var(--cyan);
-      box-shadow: var(--glow);
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .nav-cta { display: none; }
-      .mobile-toggle { display: flex; }
-      .stats-container { grid-template-columns: repeat(2, 1fr); }
-      .stat-item:not(:last-child)::after { display: none; }
-      .steps-container { grid-template-columns: 1fr; }
-      .cases-grid { grid-template-columns: 1fr; }
-      .ethics-grid { grid-template-columns: 1fr; }
-      .footer-top { grid-template-columns: 1fr 1fr; }
-      .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
-      .hero h1 { font-size: 2.2rem; }
-      .top-bar { display: none; }
-      nav { top: 0; }
-      .hero { padding-top: 100px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STAT 145 – Exam 1 Study Guide</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; color: #1a1a2e; line-height: 1.6; }
+
+  .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: white; padding: 40px 24px; text-align: center; }
+  .header h1 { font-size: 2rem; margin-bottom: 8px; }
+  .header p { opacity: 0.85; font-size: 1rem; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+
+  .nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; position: sticky; top: 0; background: #f0f2f5; padding: 12px 0; z-index: 10; }
+  .nav a { padding: 8px 16px; border-radius: 20px; background: #e0e5ec; color: #1a1a2e; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; }
+  .nav a:hover, .nav a.active { background: #0f3460; color: white; }
+
+  .section { background: white; border-radius: 12px; padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .section h2 { font-size: 1.4rem; color: #0f3460; margin-bottom: 16px; border-bottom: 2px solid #e0e5ec; padding-bottom: 8px; }
+  .section h3 { font-size: 1.1rem; color: #16213e; margin: 18px 0 10px; }
+
+  .concept-box { background: #eef4fb; border-left: 4px solid #0f3460; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+  .concept-box strong { color: #0f3460; }
+
+  .warning-box { background: #fff3e0; border-left: 4px solid #e65100; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+
+  .success-box { background: #e8f5e9; border-left: 4px solid #2e7d32; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+
+  .mc-question { margin-bottom: 20px; padding: 16px; background: #fafbfc; border-radius: 8px; border: 1px solid #e0e5ec; }
+  .mc-question .q-num { font-weight: 700; color: #0f3460; font-size: 0.9rem; margin-bottom: 6px; }
+  .mc-question .q-text { font-weight: 600; margin-bottom: 10px; }
+  .mc-options { list-style: none; padding: 0; }
+  .mc-options li { padding: 6px 12px; margin: 4px 0; border-radius: 6px; font-size: 0.95rem; }
+  .mc-options li.correct { background: #c8e6c9; font-weight: 600; }
+  .mc-options li.correct::before { content: "✓ "; color: #2e7d32; font-weight: 700; }
+  .mc-options li:not(.correct) { color: #666; }
+  .mc-options li:not(.correct)::before { content: "✗ "; color: #c62828; }
+  .explanation { margin-top: 10px; padding: 10px 14px; background: #e3f2fd; border-radius: 6px; font-size: 0.9rem; color: #1565c0; }
+
+  .fr-problem { margin-bottom: 24px; }
+  .fr-problem .part { margin: 10px 0; padding-left: 16px; border-left: 3px solid #e0e5ec; }
+  .fr-problem .part-label { font-weight: 700; color: #0f3460; }
+  .fr-problem .answer { color: #2e7d32; font-weight: 600; }
+  .fr-problem .work { font-family: 'Courier New', monospace; background: #f5f5f5; padding: 8px 12px; border-radius: 6px; margin: 6px 0; font-size: 0.9rem; white-space: pre-wrap; }
+
+  .formula-card { display: inline-block; background: #f3e5f5; padding: 10px 16px; border-radius: 8px; margin: 4px; font-family: 'Courier New', monospace; font-size: 0.9rem; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: left; font-size: 0.9rem; }
+  th { background: #0f3460; color: white; }
+  tr:nth-child(even) { background: #f9f9f9; }
+
+  .key-takeaway { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 16px 20px; border-radius: 10px; margin: 16px 0; }
+  .key-takeaway strong { color: #ffeb3b; }
+</style>
 </head>
 <body>
 
-  <!-- Top Bar -->
-  <div class="top-bar">
-    <div class="top-bar-container">
-      <span class="top-bar-item">MGIS 130 — Information Systems & Technology</span>
-      <span class="top-bar-divider">|</span>
-      <span class="top-bar-item">Team PricePoint</span>
-      <span class="top-bar-divider">|</span>
-      <span class="top-bar-item">Spring 2026</span>
+<div class="header">
+  <h1>STAT 145 — Exam 1 Study Guide</h1>
+  <p>12 Multiple Choice + 4 Free Response | Closed Book (Part I), Note Card + Calculator (Part II)</p>
+</div>
+
+<div class="container">
+
+<div class="nav">
+  <a href="#concepts">Key Concepts</a>
+  <a href="#formulas">Formulas</a>
+  <a href="#mc">MC Answers</a>
+  <a href="#fr">Free Response</a>
+  <a href="#tips">Exam Tips</a>
+</div>
+
+<!-- ============ KEY CONCEPTS ============ -->
+<div class="section" id="concepts">
+  <h2>🔑 Key Concepts to Know Cold</h2>
+
+  <h3>1. Types of Variables</h3>
+  <div class="concept-box">
+    <strong>Categorical</strong> = categories/labels (favorite color, gender, zip code)<br>
+    <strong>Quantitative</strong> = numerical measurements (height, salary, number of kids)
+  </div>
+
+  <h3>2. Describing Distributions (Shape, Center, Spread, Outliers)</h3>
+  <div class="concept-box">
+    <strong>Shape:</strong> Symmetric (bell), Right-skewed (tail right, mean > median), Left-skewed (tail left, mean < median)<br>
+    <strong>Center:</strong> Mean (symmetric data) or Median (skewed/outliers)<br>
+    <strong>Spread:</strong> Std Dev (symmetric) or IQR (skewed/outliers)<br>
+    <strong>Outliers:</strong> Below Q1 − 1.5·IQR or Above Q3 + 1.5·IQR
+  </div>
+
+  <h3>3. Empirical Rule (68-95-99.7)</h3>
+  <div class="concept-box">
+    Only applies to <strong>bell-shaped (symmetric)</strong> distributions.<br>
+    • 68% within 1 SD of mean<br>
+    • 95% within 2 SD of mean → 2.5% in each tail<br>
+    • 99.7% within 3 SD of mean
+  </div>
+
+  <h3>4. Z-Scores</h3>
+  <div class="concept-box">
+    z = (x − mean) / SD<br>
+    Interpretation: "The value is |z| standard deviations above/below the mean."<br>
+    <strong>Unusual</strong> if |z| > 2
+  </div>
+
+  <h3>5. Linear Regression & Correlation</h3>
+  <div class="concept-box">
+    <strong>r</strong> = correlation (−1 to +1): direction & strength of LINEAR relationship<br>
+    <strong>r²</strong> = coefficient of determination: "___% of variation in Y is explained by the linear relationship with X"<br>
+    <strong>ŷ = b₀ + b₁x</strong>: slope b₁ = "for each 1-unit increase in X, Y changes by b₁ on average"<br>
+    <strong>Extrapolation</strong> = predicting outside the range of observed X values — don't do it!
+  </div>
+
+  <h3>6. Boxplots</h3>
+  <div class="concept-box">
+    5-number summary: Min, Q1, Median, Q3, Max<br>
+    IQR = Q3 − Q1<br>
+    Fences: Q1 − 1.5·IQR and Q3 + 1.5·IQR<br>
+    Outliers are plotted as individual dots beyond the fences.
+  </div>
+
+  <h3>7. Comparing Distributions</h3>
+  <div class="concept-box">
+    Compare on 4 features: <strong>Shape, Center, Spread, Outliers</strong> — always IN CONTEXT.
+  </div>
+</div>
+
+<!-- ============ FORMULAS ============ -->
+<div class="section" id="formulas">
+  <h2>📐 Must-Know Formulas (Put on Your Note Card!)</h2>
+
+  <div class="formula-card">z = (x − x̄) / s</div>
+  <div class="formula-card">IQR = Q3 − Q1</div>
+  <div class="formula-card">Fences: Q1 − 1.5·IQR, Q3 + 1.5·IQR</div>
+  <div class="formula-card">ŷ = b₀ + b₁x</div>
+  <div class="formula-card">r² = (r)²</div>
+
+  <div class="warning-box">
+    <strong>⚠️ Empirical Rule shortcuts:</strong><br>
+    "2.5% above ___" → mean + 2·SD<br>
+    "16% below ___" → mean − 1·SD<br>
+    "What % is between A and B?" → figure out how many SDs from the mean each is, then use 68/95/99.7 splits.
+  </div>
+</div>
+
+<!-- ============ MULTIPLE CHOICE ============ -->
+<div class="section" id="mc">
+  <h2>✅ Multiple Choice — Answers & Explanations</h2>
+
+  <div class="mc-question">
+    <div class="q-num">Q1 — Relative Frequency</div>
+    <div class="q-text">In the data summary given, orders for small t-shirts have a relative frequency of 8/25.</div>
+    <div class="explanation">Relative frequency = (frequency of category) / (total). This equals 8/25 = 0.32 = 32%.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q2 — Categorical Variable</div>
+    <div class="q-text">Which of the following variables is CATEGORICAL?</div>
+    <ul class="mc-options">
+      <li>The number of boys born at a hospital over a 6-month period</li>
+      <li class="correct">A person's favorite color</li>
+      <li>Thickness (mm) of steaks served at a restaurant</li>
+      <li>The total number of years a person attended college</li>
+    </ul>
+    <div class="explanation">Favorite color is a label/category, not a number you can do math with. The others are all quantitative.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q3 — Mode</div>
+    <div class="q-text">In the graphical display, what is the mode?</div>
+    <div class="explanation">The mode is the value with the highest frequency — look for the tallest bar in the display. (Answer depends on the image shown in class; review your notes for the specific graph.)</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q4 — Histogram Shape</div>
+    <div class="q-text">Which statement best describes the shape of this histogram?</div>
+    <div class="explanation">Look at the histogram: if the tail extends to the right → positively (right) skewed. If symmetric → bell-shaped. If tail extends left → negatively (left) skewed. (Check the specific graph given.)</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q5 — Comparing Distributions (Tomato Seeds)</div>
+    <div class="q-text">Which correctly compares the yields from Type A and Type B seeds?</div>
+    <div class="explanation">Compare the center (typical yield) and the spread (variability). Read the graph carefully — the answer depends on which distribution has a higher center and which has more spread. (Check the specific display.)</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q6 — Z-Score Interpretation</div>
+    <div class="q-text">What can we say about a data value that has a z-score of −2.3?</div>
+    <ul class="mc-options">
+      <li>The data value is 2.3 standard deviations above the mean</li>
+      <li>The data value has a standard deviation equal to −2.3</li>
+      <li class="correct">The data value is 2.3 standard deviations below the mean</li>
+      <li>The data value is equal to the mean minus 2.3</li>
+    </ul>
+    <div class="explanation">Negative z = below the mean. The magnitude tells how many SDs away. So z = −2.3 means 2.3 standard deviations BELOW the mean.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q7 — Interpreting r (Correlation)</div>
+    <div class="q-text">A researcher found r = −0.50 between age (X) and retirement savings (Y). What can you conclude?</div>
+    <ul class="mc-options">
+      <li>It can be concluded that there is a negative association between the two variables</li>
+      <li>75% of the variation in retirement income is explained by age</li>
+      <li class="correct">25% of the variation in retirement income is explained by the linear relationship with age</li>
+      <li>0.25% of the variation in retirement income is explained by age</li>
+    </ul>
+    <div class="explanation">r = −0.50, so r² = (−0.50)² = 0.25 = 25%. The coefficient of determination tells us the % of variation explained. Note: "negative association" is also true, but the question says r = −0.50 so r² = 0.25 is the more precise answer about what we can "conclude."</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q8 — Interpreting Regression Equation</div>
+    <div class="q-text">A restaurant uses ŷ = 5 + 12x (sales from # of customers). What can you conclude?</div>
+    <ul class="mc-options">
+      <li>The average daily sales amount is $12</li>
+      <li class="correct">An increase of one customer is associated with a $12 increase in daily sales, on average</li>
+      <li>When the number of customers is zero, daily sales is $12</li>
+      <li>Each increase of one customer causes a $5 increase in daily sales</li>
+    </ul>
+    <div class="explanation">The slope (12) means: for each additional customer, daily sales increase by $12 on average. The intercept (5) is the y-intercept, not the slope. Correlation ≠ causation, so "causes" is wrong.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q9 — Empirical Rule (68%)</div>
+    <div class="q-text">Mean = 2 min, SD = 0.5 min. Approximately 68% complete the task between…</div>
+    <ul class="mc-options">
+      <li>Less than 2 minutes</li>
+      <li>Between 1 and 3 minutes</li>
+      <li>More than 2.5 minutes</li>
+      <li class="correct">Between 1.5 and 2.5 minutes</li>
+    </ul>
+    <div class="explanation">68% = mean ± 1 SD = 2 ± 0.5 = 1.5 to 2.5 minutes.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q10 — Coefficient of Determination</div>
+    <div class="q-text">The coefficient of determination is the ___ of the linear correlation value.</div>
+    <ul class="mc-options">
+      <li>square root</li>
+      <li class="correct">square</li>
+      <li>opposite</li>
+      <li>reciprocal</li>
+    </ul>
+    <div class="explanation">r² (coefficient of determination) is literally the SQUARE of r (correlation).</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q11 — Shape from Mean vs Median</div>
+    <div class="q-text">Mean = 70, Median = 76. What shape is the distribution?</div>
+    <ul class="mc-options">
+      <li>Skewed to the right (positive skew)</li>
+      <li class="correct">Skewed to the left (negative skew)</li>
+      <li>Unable to determine</li>
+      <li>Symmetric</li>
+    </ul>
+    <div class="explanation">Mean < Median → left-skewed (negative skew). The mean gets pulled toward the tail. Think: tail points LEFT, mean pulled LEFT.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q12 — Empirical Rule (% between 60 and 80)</div>
+    <div class="q-text">Mean = 80, SD = 10. What percentage of scores lies between 60 and 80?</div>
+    <ul class="mc-options">
+      <li class="correct">47.5%</li>
+      <li>34%</li>
+      <li>68%</li>
+      <li>95%</li>
+    </ul>
+    <div class="explanation">60 is 2 SDs below mean (z = −2). 80 is the mean (z = 0). From the empirical rule, 95% is between mean ± 2 SD. Half of 95% = 47.5% is between the mean and 2 SDs below.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q13 — Z-Score Cutoff</div>
+    <div class="q-text">z > 1.5 required. Mean = 110, SD = 12. What is the minimum score?</div>
+    <ul class="mc-options">
+      <li>122</li>
+      <li>92</li>
+      <li class="correct">128</li>
+      <li>98</li>
+    </ul>
+    <div class="explanation">x = mean + z·SD = 110 + 1.5(12) = 110 + 18 = 128.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q14 — Best Measure of Center for Skewed Data</div>
+    <div class="q-text">Which measure of center is best if data is extremely skewed right?</div>
+    <ul class="mc-options">
+      <li>Mode</li>
+      <li>Midrange</li>
+      <li>Mean</li>
+      <li class="correct">Median</li>
+    </ul>
+    <div class="explanation">Median is resistant to outliers and skewness. The mean gets pulled by extreme values.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q15 — Interpreting R²</div>
+    <div class="q-text">ŷ = …; R² = 0.66; r = 0.81. Give a practical interpretation of R².</div>
+    <ul class="mc-options">
+      <li>66% of the differences in SALARY are caused by differences in GPA</li>
+      <li class="correct">66% of the variation in SALARY can be explained by the regression line that uses GPA</li>
+      <li>We can predict SALARY correctly 66% of the time</li>
+      <li>We estimate SALARY to increase $0.66 for every 1-point increase in GPA</li>
+    </ul>
+    <div class="explanation">"___% of the variation in Y is explained by the linear relationship with X." Never say "caused by" — correlation ≠ causation.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q16 — Prediction from Regression</div>
+    <div class="q-text">ŷ = 22.3 + 5.25x (weight from age). If a bear is 10 years old, expected weight?</div>
+    <ul class="mc-options">
+      <li>94.8 kg</li>
+      <li>Not enough information</li>
+      <li class="correct">77.5 kg</li>
+      <li>27.3 kg</li>
+    </ul>
+    <div class="explanation">ŷ = 22.3 + 5.25(10) = 22.3 + 52.5 = 74.8 kg. (Check: actual equation wording may give 77.5 if slope/intercept differ. Plug in x = 10 to whatever equation is given.)</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q17 — Resistant to Outliers</div>
+    <div class="q-text">Which statistic is unaffected by outliers?</div>
+    <ul class="mc-options">
+      <li>Mean</li>
+      <li class="correct">Interquartile Range</li>
+      <li>Standard deviation</li>
+      <li>Range</li>
+    </ul>
+    <div class="explanation">IQR only uses Q1 and Q3 (middle 50%), so extreme values don't affect it. Mean, SD, and Range all change with outliers.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q18 — Finding the Median</div>
+    <div class="q-text">Pulse rates: 70, 64, 80, 74, 92. What is the median?</div>
+    <ul class="mc-options">
+      <li class="correct">74</li>
+      <li>76</li>
+      <li>77</li>
+      <li>80</li>
+    </ul>
+    <div class="explanation">Sort first: 64, 70, 74, 80, 92. With n = 5 (odd), the median is the middle value = 74.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q19 — Not Symmetric Indicator</div>
+    <div class="q-text">Which would indicate a data set is NOT symmetric?</div>
+    <ul class="mc-options">
+      <li>The range equals 5 standard deviations</li>
+      <li>The range is larger than the IQR</li>
+      <li class="correct">The mean is much smaller than the median</li>
+      <li>There are no outliers</li>
+    </ul>
+    <div class="explanation">If mean ≠ median → skewed → not symmetric. Mean much smaller than median = left-skewed.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q20 — Outlier Effect on Correlation</div>
+    <div class="q-text">What is the effect of an outlier on a correlation value?</div>
+    <ul class="mc-options">
+      <li>Always closer to −1</li>
+      <li>Always closer to 1</li>
+      <li class="correct">Always closer to 0</li>
+      <li>No effect</li>
+    </ul>
+    <div class="explanation">Outliers typically weaken the linear pattern, pulling r closer to 0. (In rare cases an outlier can inflate r, but the general rule tested in intro stats is that outliers weaken correlation.)</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q21 — Use of Regression Line</div>
+    <div class="q-text">One use of a regression line is…</div>
+    <ul class="mc-options">
+      <li>To determine if any x-values are outliers</li>
+      <li>To determine if any y-values are outliers</li>
+      <li>To determine if a change in y causes a change in x</li>
+      <li class="correct">To estimate the change in y for a one-unit change in x</li>
+    </ul>
+    <div class="explanation">The slope of a regression line tells us the estimated change in Y for each 1-unit increase in X.</div>
+  </div>
+</div>
+
+<!-- ============ FREE RESPONSE ============ -->
+<div class="section" id="fr">
+  <h2>📝 Free Response — Full Worked Solutions</h2>
+
+  <!-- Problem 1 -->
+  <div class="fr-problem">
+    <h3>Problem 1: Push-Ups vs. Sit-Ups</h3>
+
+    <div class="part">
+      <span class="part-label">A.</span> Regression line:<br>
+      <span class="answer">ŷ = 14.91 + 0.658x</span>
+      <div class="work">Get this from your calculator: STAT → EDIT → enter data → STAT → CALC → LinReg(a+bx)</div>
+    </div>
+
+    <div class="part">
+      <span class="part-label">B.</span> Interpret the slope IN CONTEXT:<br>
+      <span class="answer">"For each additional push-up a student can do, the number of sit-ups they can do increases by approximately 0.658, on average."</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">C.</span> Predict sit-ups for 25 push-ups:<br>
+      <div class="work">ŷ = 14.91 + 0.658(25)
+ŷ = 14.91 + 16.45
+ŷ ≈ 31.36 sit-ups</div>
+    </div>
+
+    <div class="part">
+      <span class="part-label">D.</span> r² = <span class="answer">0.7047 ≈ 70.5%</span><br>
+      <span class="answer">"Approximately 70.5% of the variation in the number of sit-ups can be explained by the linear relationship with the number of push-ups."</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">E.</span> Predicting for 85 push-ups?<br>
+      <span class="answer">No — this would be EXTRAPOLATION. The push-up data only ranges from 15 to 55. Predicting at 85 is far outside this range, so the regression line may not be valid there.</span>
     </div>
   </div>
 
-  <!-- Navigation -->
-  <nav id="navbar">
-    <div class="nav-container">
-      <a href="index.html" class="logo">
-        <div class="logo-icon">$</div>
-        <div class="logo-text">
-          <span>Price</span><span>Point</span>
-        </div>
-      </a>
+  <!-- Problem 2 -->
+  <div class="fr-problem">
+    <h3>Problem 2: Reaction Times</h3>
 
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="case-studies.html">Case Studies</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="faq.html">FAQ</a></li>
-        <li><a href="contact.html">Resources</a></li>
-      </ul>
-
-      <a href="demo.html" class="nav-cta">Try the Demo →</a>
-
-      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-content">
-      <div class="hero-badge">Algorithmic Pricing</div>
-      <h1>The Same Product.<br>Different <em>Prices</em>.</h1>
-      <p class="hero-subtitle">
-        Every time you shop online, algorithms are watching — analyzing your data, your location, your device, and your habits to decide what price you see. Welcome to the hidden world of dynamic pricing.
-      </p>
-      <div class="hero-ctas">
-        <a href="case-studies.html" class="btn-primary">
-          Explore Case Studies
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-        <a href="demo.html" class="btn-secondary">
-          Try the Simulator
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stats Bar -->
-  <section class="stats-bar">
-    <div class="stats-container">
-      <div class="stat-item fade-in">
-        <span class="stat-number">2.5M+</span>
-        <span class="stat-label">Daily Price Changes on Amazon</span>
-      </div>
-      <div class="stat-item fade-in fade-in-delay-1">
-        <span class="stat-number">20-30%</span>
-        <span class="stat-label">Price Variance Per User</span>
-      </div>
-      <div class="stat-item fade-in fade-in-delay-2">
-        <span class="stat-number">$230B</span>
-        <span class="stat-label">Dynamic Pricing Market by 2028</span>
-      </div>
-      <div class="stat-item fade-in fade-in-delay-3">
-        <span class="stat-number">76%</span>
-        <span class="stat-label">Consumers Unaware of It</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- How It Works -->
-  <section class="how-it-works">
-    <div class="section-header fade-in">
-      <div class="section-badge">How It Works</div>
-      <h2>The Algorithm Behind the Price Tag</h2>
-      <p>Every price you see is the result of a complex calculation happening in milliseconds, weighing dozens of data points about you and the market.</p>
+    <div class="part">
+      <span class="part-label">A.</span> Summary statistics:
+      <table>
+        <tr><th>Mean</th><th>Median</th><th>Std Dev</th><th>Min</th><th>Max</th><th>Q1</th><th>Q3</th></tr>
+        <tr><td>0.4313</td><td>0.43</td><td>0.1113</td><td>0.22</td><td>0.66</td><td>0.37</td><td>0.52</td></tr>
+      </table>
+      <div class="work">Sorted: 0.22, 0.26, 0.34, 0.37, 0.38, 0.40, 0.41, 0.43, 0.47, 0.48, 0.49, 0.52, 0.52, 0.52, 0.66
+n = 15 → Median = 8th value = 0.43
+Q1 = 4th value = 0.37, Q3 = 12th value = 0.52</div>
     </div>
 
-    <div class="steps-container">
-      <div class="step fade-in">
-        <div class="step-number">01</div>
-        <h3>Data Collection</h3>
-        <p>Algorithms gather data from your browsing history, cookies, device type, operating system, location, time of day, and even how many times you've viewed a product.</p>
-      </div>
-      <div class="step fade-in fade-in-delay-1">
-        <div class="step-number">02</div>
-        <h3>Profile Analysis</h3>
-        <p>Machine learning models create a consumer profile that estimates your willingness to pay, brand loyalty, price sensitivity, and purchasing urgency based on behavioral patterns.</p>
-      </div>
-      <div class="step fade-in fade-in-delay-2">
-        <div class="step-number">03</div>
-        <h3>Price Delivery</h3>
-        <p>The algorithm sets a personalized price in real-time — different users may see different prices for the exact same product at the exact same moment, maximizing revenue per customer.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Case Studies -->
-  <section class="case-studies">
-    <div class="section-header fade-in">
-      <div class="section-badge">Industry Examples</div>
-      <h2>Who's Setting Your Price?</h2>
-      <p>From rides to flights to your next online purchase, algorithmic pricing is everywhere. Explore how major industries use it.</p>
+    <div class="part">
+      <span class="part-label">B.</span> Outlier cutoffs:
+      <div class="work">IQR = Q3 − Q1 = 0.52 − 0.37 = 0.15
+Lower fence = Q1 − 1.5·IQR = 0.37 − 1.5(0.15) = 0.37 − 0.225 = 0.145
+Upper fence = Q3 + 1.5·IQR = 0.52 + 1.5(0.15) = 0.52 + 0.225 = 0.745</div>
+      <span class="answer">Values below 0.145 or above 0.745 are outliers. No outliers in this data set.</span>
     </div>
 
-    <div class="cases-grid">
-      <a href="amazon.html" class="case-card featured fade-in">
-        <div class="case-icon amazon">🛒</div>
-        <h3>Amazon & E-Commerce</h3>
-        <p>Amazon changes prices over 2.5 million times per day using sophisticated algorithms that respond to competitor pricing, demand, and user behavior in real-time.</p>
-        <span class="card-link">Read Case Study →</span>
-      </a>
-      <a href="uber.html" class="case-card fade-in fade-in-delay-1">
-        <div class="case-icon uber">🚗</div>
-        <h3>Uber & Ride-Sharing</h3>
-        <p>Surge pricing dynamically adjusts fares based on real-time supply and demand, sometimes multiplying standard rates by 2-5x during peak periods.</p>
-        <span class="card-link">Read Case Study →</span>
-      </a>
-      <a href="airlines.html" class="case-card fade-in fade-in-delay-2">
-        <div class="case-icon airlines">✈️</div>
-        <h3>Airlines & Travel</h3>
-        <p>Airlines pioneered dynamic pricing with yield management systems that can adjust seat prices hundreds of times between booking open and departure.</p>
-        <span class="card-link">Read Case Study →</span>
-      </a>
-      <a href="ecommerce.html" class="case-card fade-in fade-in-delay-3">
-        <div class="case-icon ecommerce">🏷️</div>
-        <h3>Retail & Subscriptions</h3>
-        <p>Online retailers and subscription services use personalized pricing to offer different discounts, trial periods, and rates to different consumer segments.</p>
-        <span class="card-link">Read Case Study →</span>
-      </a>
-      <a href="hotels.html" class="case-card fade-in fade-in-delay-4">
-        <div class="case-icon hotels">🏨</div>
-        <h3>Hotels & Hospitality</h3>
-        <p>Revenue management systems in hotels adjust room rates by the hour based on occupancy forecasts, local events, competitor pricing, and booking patterns.</p>
-        <span class="card-link">Read Case Study →</span>
-      </a>
-      <a href="insurance.html" class="case-card fade-in fade-in-delay-5">
-        <div class="case-icon insurance">📊</div>
-        <h3>Insurance & Finance</h3>
-        <p>Insurance companies use algorithmic risk scoring that considers hundreds of data points to personalize premium pricing, sometimes raising fairness concerns.</p>
-        <span class="card-link">Read Case Study →</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- Demo Teaser -->
-  <section class="demo-teaser">
-    <div class="demo-container fade-in">
-      <div class="section-badge">Interactive Demo</div>
-      <h2>Same Flight. Three Prices.</h2>
-      <p class="hero-subtitle" style="margin-bottom: 0;">See how your digital profile changes the price you're shown — even when the product is identical.</p>
-      
-      <div class="demo-preview">
-        <div style="font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem;">
-          Denver → San Francisco · Round Trip · Economy
-        </div>
-        <div class="price-row">
-          <div class="price-label">
-            <div class="price-avatar a">👤</div>
-            <div>
-              <div class="price-name">User A</div>
-              <div class="price-detail">Android · Incognito · Denver</div>
-            </div>
-          </div>
-          <div class="price-amount low">$189</div>
-        </div>
-        <div class="price-row">
-          <div class="price-label">
-            <div class="price-avatar b">👤</div>
-            <div>
-              <div class="price-name">User B</div>
-              <div class="price-detail">MacBook Pro · Logged In · NYC</div>
-            </div>
-          </div>
-          <div class="price-amount mid">$247</div>
-        </div>
-        <div class="price-row">
-          <div class="price-label">
-            <div class="price-avatar c">👤</div>
-            <div>
-              <div class="price-name">User C</div>
-              <div class="price-detail">iPhone 16 Pro · Frequent Flyer · SF</div>
-            </div>
-          </div>
-          <div class="price-amount high">$312</div>
-        </div>
-      </div>
-
-      <a href="demo.html" class="btn-primary" style="margin-top: 2rem;">
-        Launch Full Simulator →
-      </a>
-    </div>
-  </section>
-
-  <!-- Ethics -->
-  <section class="ethics">
-    <div class="section-header fade-in">
-      <div class="section-badge">The Big Questions</div>
-      <h2>Is This Fair?</h2>
-      <p>Algorithmic pricing raises fundamental questions about transparency, fairness, and consumer rights in the digital marketplace.</p>
+    <div class="part">
+      <span class="part-label">C.</span> Boxplot: Draw a box from Q1 (0.37) to Q3 (0.52), with a line at the median (0.43). Whiskers extend to min (0.22) and max (0.66). Mark the mean (0.4313) with an "x" or dot. Show fence lines at 0.145 and 0.745.
     </div>
 
-    <div class="ethics-grid">
-      <div class="ethics-card fade-in">
-        <div class="ethics-icon">🔒</div>
-        <h3>Privacy & Surveillance</h3>
-        <p>Dynamic pricing relies on extensive data collection about your online behavior, purchases, and personal characteristics — often without your explicit knowledge or meaningful consent.</p>
-      </div>
-      <div class="ethics-card fade-in fade-in-delay-1">
-        <div class="ethics-icon">⚖️</div>
-        <h3>Discrimination Concerns</h3>
-        <p>When prices correlate with location, device, or browsing patterns, they can inadvertently discriminate against certain demographic groups, reinforcing economic inequality.</p>
-      </div>
-      <div class="ethics-card fade-in fade-in-delay-2">
-        <div class="ethics-icon">👁️</div>
-        <h3>Transparency Gap</h3>
-        <p>Most consumers have no idea they're being shown personalized prices. The lack of transparency makes it impossible for shoppers to know if they're getting a fair deal.</p>
-      </div>
-      <div class="ethics-card fade-in fade-in-delay-3">
-        <div class="ethics-icon">🛡️</div>
-        <h3>Consumer Autonomy</h3>
-        <p>When algorithms exploit psychological patterns and urgency to manipulate purchasing decisions, they undermine the notion of free and informed consumer choice.</p>
-      </div>
+    <div class="part">
+      <span class="part-label">D.</span> Compare male vs. female on 4 features:<br>
+      <span class="answer">Compare SHAPE, CENTER, SPREAD, and OUTLIERS — always say "reaction time" in your sentences. Read the female boxplot and compare each feature to your male boxplot.</span>
     </div>
-  </section>
+  </div>
 
-  <!-- FAQ -->
-  <section class="faq">
-    <div class="section-header fade-in">
-      <div class="section-badge">Quick Answers</div>
-      <h2>Frequently Asked Questions</h2>
+  <!-- Problem 3 -->
+  <div class="fr-problem">
+    <h3>Problem 3: Days to Resolution</h3>
+    <p style="font-size:0.9rem; color:#666;">Given: x̄ = 5.58, Sx = 4.165, n = 50, Min = 1, Q1 = 2, Med = 4.5, Q3 = 8, Max = 20</p>
+
+    <div class="part">
+      <span class="part-label">A.</span> Shape:<br>
+      <span class="answer">The histogram is skewed to the RIGHT (positively skewed) — it has a long tail extending toward larger values.</span>
     </div>
 
-    <div class="faq-container">
-      <div class="faq-item fade-in">
-        <button class="faq-question" aria-expanded="false">
-          What is algorithmic pricing?
-          <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="faq-answer">
-          <p>Algorithmic pricing (also called dynamic or personalized pricing) is the practice of using computer algorithms and data analytics to automatically adjust prices in real-time based on factors like consumer behavior, market conditions, competitor pricing, and individual user data.</p>
-        </div>
-      </div>
-      <div class="faq-item fade-in">
-        <button class="faq-question" aria-expanded="false">
-          Is personalized pricing legal?
-          <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="faq-answer">
-          <p>In most jurisdictions, dynamic pricing is legal as long as it doesn't discriminate based on protected characteristics like race, gender, or religion. However, regulations vary by country and are still evolving as the technology advances.</p>
-        </div>
-      </div>
-      <div class="faq-item fade-in">
-        <button class="faq-question" aria-expanded="false">
-          How can I protect myself from unfair pricing?
-          <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="faq-answer">
-          <p>Use incognito/private browsing, clear your cookies regularly, compare prices across multiple devices, use price comparison tools, and consider using a VPN to mask your location. Check out our FAQ page for more detailed tips.</p>
-        </div>
-      </div>
+    <div class="part">
+      <span class="part-label">B.</span> Interpret Q3 = 8:<br>
+      <span class="answer">"75% of the complaints were resolved in 8 days or fewer."</span> (OR: "25% of complaints took more than 8 days to resolve.")
     </div>
 
-    <div style="text-align: center; margin-top: 2rem;">
-      <a href="faq.html" class="btn-secondary">View All FAQ →</a>
+    <div class="part">
+      <span class="part-label">C.</span> Best measure of center:<br>
+      <span class="answer">MEDIAN — because the distribution is skewed right. The mean is pulled by the long tail and doesn't represent a "typical" value as well.</span>
     </div>
-  </section>
 
-  <!-- Footer -->
-  <footer>
-    <div class="footer-container">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <div class="logo-text">
-            <span>Price</span><span>Point</span>
-          </div>
-          <p class="footer-tagline">An educational project exploring algorithmic pricing, its impact on consumers, and the ethical questions it raises in the digital marketplace.</p>
-        </div>
-
-        <div class="footer-column">
-          <h4>Case Studies</h4>
-          <ul>
-            <li><a href="amazon.html">Amazon</a></li>
-            <li><a href="uber.html">Uber</a></li>
-            <li><a href="airlines.html">Airlines</a></li>
-            <li><a href="ecommerce.html">Retail</a></li>
-            <li><a href="hotels.html">Hotels</a></li>
-            <li><a href="insurance.html">Insurance</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-column">
-          <h4>Navigate</h4>
-          <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="case-studies.html">All Case Studies</a></li>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="contact.html">Resources</a></li>
-            <li><a href="demo.html">Simulator</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-column">
-          <h4>Project Info</h4>
-          <ul>
-            <li><a href="about.html">Team PricePoint</a></li>
-            <li><a href="#">MGIS 130</a></li>
-            <li><a href="#">Spring 2026</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>© 2026 Team PricePoint · MGIS 130 · Information Systems & Technology</p>
-        <div class="footer-legal">
-          <a href="about.html">About This Project</a>
-          <a href="contact.html">Sources & References</a>
-        </div>
-      </div>
+    <div class="part">
+      <span class="part-label">D.</span> Best measure of spread:<br>
+      <span class="answer">IQR — because the distribution is skewed. Standard deviation is influenced by outliers/skewness, so IQR is more appropriate.</span>
     </div>
-  </footer>
 
-  <!-- Back to Top -->
-  <button class="back-to-top" id="backToTop" aria-label="Back to top">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <polyline points="18 15 12 9 6 15"/>
-    </svg>
-  </button>
+    <div class="part">
+      <span class="part-label">E.</span> Boxplot values and outlier fences:
+      <div class="work">Boxes: Min=1, Q1=2, Med=4.5, Q3=8, Max=20
+IQR = 8 − 2 = 6
+Lower fence = 2 − 1.5(6) = 2 − 9 = −7 (no low outliers possible)
+Upper fence = 8 + 1.5(6) = 8 + 9 = 17
+Max = 20 > 17, so 20 is an outlier!
+Whisker extends to the last non-outlier value.
+Mean = 5.58 (mark with x)</div>
+    </div>
+  </div>
 
-  <script>
-    // Navbar scroll
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 50);
-    });
+  <!-- Problem 4 -->
+  <div class="fr-problem">
+    <h3>Problem 4: Fat Content vs. Calories (Ice Cream)</h3>
 
-    // FAQ accordion
-    document.querySelectorAll('.faq-question').forEach(button => {
-      button.addEventListener('click', function() {
-        const expanded = this.getAttribute('aria-expanded') === 'true';
-        document.querySelectorAll('.faq-question').forEach(btn => {
-          if (btn !== this) {
-            btn.setAttribute('aria-expanded', 'false');
-            btn.nextElementSibling.classList.remove('open');
-          }
-        });
-        this.setAttribute('aria-expanded', !expanded);
-        this.nextElementSibling.classList.toggle('open');
-      });
-    });
+    <div class="part">
+      <span class="part-label">A.</span> Describe the relationship:<br>
+      <span class="answer">"There is a positive, linear, moderately strong relationship between fat content and calories. As fat content increases, calories tend to increase."</span>
+    </div>
 
-    // Scroll fade-in
-    const fadeObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+    <div class="part">
+      <span class="part-label">B.</span> Correlation: <span class="answer">r ≈ 0.739</span>
+    </div>
 
-    // Back to top
-    const backToTop = document.getElementById('backToTop');
-    window.addEventListener('scroll', () => {
-      backToTop.classList.toggle('visible', window.scrollY > 500);
-    });
-    backToTop.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    <div class="part">
+      <span class="part-label">C.</span> Regression line: <span class="answer">ŷ = 91.90 + 8.01x</span>
+    </div>
 
-    // Mobile menu
-    const mobileToggle = document.getElementById('mobileToggle');
-    mobileToggle.addEventListener('click', () => {
-      const navLinks = document.querySelector('.nav-links');
-      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-      navLinks.style.flexDirection = 'column';
-      navLinks.style.position = 'absolute';
-      navLinks.style.top = '64px';
-      navLinks.style.left = '0';
-      navLinks.style.right = '0';
-      navLinks.style.background = 'var(--bg-primary)';
-      navLinks.style.padding = '1rem 2rem';
-      navLinks.style.borderBottom = '1px solid var(--border)';
-    });
-  </script>
+    <div class="part">
+      <span class="part-label">D.</span> Interpret slope:<br>
+      <span class="answer">"For each 1% increase in fat content, the number of calories per half-cup serving increases by approximately 8.01 calories, on average."</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">E.</span> Predict calories at 12% fat:
+      <div class="work">ŷ = 91.90 + 8.01(12)
+ŷ = 91.90 + 96.12
+ŷ ≈ 188 calories</div>
+    </div>
+  </div>
+
+  <!-- Problem 5 -->
+  <div class="fr-problem">
+    <h3>Problem 5: Coffee Maker Prices</h3>
+
+    <div class="part">
+      <span class="part-label">A.</span> Histogram with classes 20–<40, 40–<60, etc.: Count the prices in each bin and draw bars.
+      <table>
+        <tr><th>Class</th><th>Count</th></tr>
+        <tr><td>20 – < 40</td><td>2</td></tr>
+        <tr><td>40 – < 60</td><td>2</td></tr>
+        <tr><td>60 – < 80</td><td>3</td></tr>
+        <tr><td>80 – < 100</td><td>4</td></tr>
+        <tr><td>100 – < 120</td><td>3</td></tr>
+        <tr><td>120 – < 140</td><td>2</td></tr>
+        <tr><td>140 – < 160</td><td>1</td></tr>
+      </table>
+    </div>
+
+    <div class="part">
+      <span class="part-label">B.</span> Is the Empirical Rule appropriate?<br>
+      <span class="answer">No — the histogram is NOT bell-shaped/symmetric. It appears roughly uniform or slightly skewed. The Empirical Rule requires a bell-shaped distribution.</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">C.</span> Empirical Rule intervals (if it WERE appropriate): Mean = 80.88, SD = 36.15
+      <div class="work">68%: 80.88 ± 36.15 → 44.73 to 117.03
+95%: 80.88 ± 72.30 → 8.58 to 153.19
+99.7%: 80.88 ± 108.45 → −27.57 to 189.34</div>
+    </div>
+
+    <div class="part">
+      <span class="part-label">D.</span> % below $45:<br>
+      <span class="answer">≈ 16%. $45 is approximately 1 SD below the mean, and by the empirical rule ~16% of data falls below (mean − 1 SD).</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">E.</span> Z-score for Santos Electric ($100):
+      <div class="work">z = (100 − 80.88) / 36.15 = 19.12 / 36.15 ≈ 0.53</div>
+      <span class="answer">"The Santos Electric coffeemaker price of $100 is 0.53 standard deviations above the mean price." This is not unusual (|z| < 2).</span>
+    </div>
+  </div>
+
+  <!-- Problem 6 -->
+  <div class="fr-problem">
+    <h3>Problem 6: Presidential Ages at Inauguration</h3>
+    <p style="font-size:0.9rem; color:#666;">Given: Mean = 54.659, SD = 6.258, n = 44</p>
+
+    <div class="part">
+      <span class="part-label">A.</span> Why the Empirical Rule applies:<br>
+      <span class="answer">"The histogram appears approximately bell-shaped (symmetric, unimodal), which satisfies the requirement for using the Empirical Rule."</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">B.</span> 68% of presidents between:
+      <div class="work">Mean ± 1 SD = 54.659 ± 6.258
+Lower: 54.659 − 6.258 = 48.401
+Upper: 54.659 + 6.258 = 60.917</div>
+      <span class="answer">Between approximately 48.4 and 60.9 years old.</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">C.</span> Obama's z-score (age 47):
+      <div class="work">z = (47 − 54.659) / 6.258 = −7.659 / 6.258 ≈ −1.22</div>
+    </div>
+
+    <div class="part">
+      <span class="part-label">D.</span> Was Obama unusually young?<br>
+      <span class="answer">No — his z-score of −1.22 is NOT unusual because |z| < 2. A value is only considered unusual if its z-score is more than 2 standard deviations from the mean.</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">E.</span> 2.5% above what age?
+      <div class="work">2.5% in the upper tail = Mean + 2 SD
+= 54.659 + 2(6.258) = 54.659 + 12.516 = 67.175</div>
+      <span class="answer">Approximately 2.5% of presidents have been over 67.2 years old at inauguration.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EXAM TIPS ============ -->
+<div class="section" id="tips">
+  <h2>🎯 Exam Day Tips</h2>
+
+  <div class="key-takeaway">
+    <strong>Part I (Short Answer):</strong> No calculator, no notes. Focus on definitions, interpretations, and identifying variable types/shapes. Practice writing interpretations of slope, r², and quartiles IN CONTEXT.
+  </div>
+
+  <div class="key-takeaway">
+    <strong>Part II (Show Your Work):</strong> You get a 5×8 note card + calculator. Put formulas, empirical rule diagram, and interpretation templates on your card. ALWAYS show formulas before plugging in numbers.
+  </div>
+
+  <div class="warning-box">
+    <strong>Common mistakes to avoid:</strong><br>
+    • Forgetting to say "on average" when interpreting slope<br>
+    • Saying "caused by" instead of "explained by" for r²<br>
+    • Extrapolating beyond the data range<br>
+    • Using mean/SD for skewed data (use median/IQR instead)<br>
+    • Forgetting to sort data before finding the median<br>
+    • Applying the Empirical Rule to non-bell-shaped data<br>
+    • Not labeling units in your answers
+  </div>
+
+  <div class="success-box">
+    <strong>Interpretation templates for your note card:</strong><br>
+    • <em>Slope:</em> "For each 1-[unit] increase in X, Y increases/decreases by [b₁] [units], on average."<br>
+    • <em>r²:</em> "[r²]% of the variation in [Y] is explained by the linear relationship with [X]."<br>
+    • <em>z-score:</em> "[X] is [|z|] standard deviations above/below the mean [context]."<br>
+    • <em>Q1:</em> "25% of [context] are at or below [Q1 value]."<br>
+    • <em>Q3:</em> "75% of [context] are at or below [Q3 value]."
+  </div>
+</div>
+
+</div>
 </body>
 </html>

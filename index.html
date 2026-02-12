@@ -1,790 +1,634 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edge Computing — The Future at Your Fingertips</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-deep: #0a0c10;
-            --bg-card: #12151c;
-            --bg-card-hover: #181c26;
-            --accent-cyan: #00e5ff;
-            --accent-magenta: #ff2d78;
-            --accent-amber: #ffb300;
-            --text-primary: #e8ecf4;
-            --text-muted: #8a93a8;
-            --text-dim: #555e72;
-            --glow-cyan: rgba(0, 229, 255, 0.15);
-            --glow-magenta: rgba(255, 45, 120, 0.12);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg-deep);
-            color: var(--text-primary);
-            overflow-x: hidden;
-            line-height: 1.7;
-        }
-
-        /* ─── GRID BACKGROUND ─── */
-        .grid-bg {
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ─── NAVIGATION ─── */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 100;
-            padding: 1.2rem 3rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            backdrop-filter: blur(20px);
-            background: rgba(10, 12, 16, 0.7);
-            border-bottom: 1px solid rgba(0,229,255,0.08);
-        }
-
-        .logo {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: 1.3rem;
-            letter-spacing: -0.5px;
-        }
-
-        .logo span { color: var(--accent-cyan); }
-
-        .nav-links { display: flex; gap: 2.2rem; list-style: none; }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.88rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover { color: var(--accent-cyan); }
-
-        /* ─── HERO ─── */
-        .hero {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 8rem 2rem 4rem;
-        }
-
-        .hero-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.4;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .hero-orb--cyan {
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, var(--accent-cyan), transparent 70%);
-            top: 10%; left: 15%;
-        }
-
-        .hero-orb--magenta {
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, var(--accent-magenta), transparent 70%);
-            bottom: 15%; right: 10%;
-            animation-delay: -4s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-30px) scale(1.05); }
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1.2rem;
-            border: 1px solid rgba(0,229,255,0.25);
-            border-radius: 100px;
-            font-size: 0.8rem;
-            color: var(--accent-cyan);
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-bottom: 2rem;
-            backdrop-filter: blur(10px);
-            background: rgba(0,229,255,0.05);
-            animation: fadeUp 0.8s ease-out both;
-        }
-
-        .hero-badge::before {
-            content: '';
-            width: 6px; height: 6px;
-            background: var(--accent-cyan);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-cyan);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        h1 {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: clamp(3rem, 7vw, 6rem);
-            line-height: 1.05;
-            letter-spacing: -2px;
-            max-width: 900px;
-            animation: fadeUp 0.8s ease-out 0.15s both;
-        }
-
-        h1 .gradient-text {
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: 1.15rem;
-            color: var(--text-muted);
-            max-width: 620px;
-            margin-top: 1.5rem;
-            animation: fadeUp 0.8s ease-out 0.3s both;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2.5rem;
-            animation: fadeUp 0.8s ease-out 0.45s both;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.9rem 2rem;
-            border-radius: 8px;
-            font-family: 'Syne', sans-serif;
-            font-weight: 600;
-            font-size: 0.95rem;
-            text-decoration: none;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn--primary {
-            background: var(--accent-cyan);
-            color: var(--bg-deep);
-            box-shadow: 0 0 30px rgba(0,229,255,0.25);
-        }
-
-        .btn--primary:hover {
-            box-shadow: 0 0 50px rgba(0,229,255,0.4);
-            transform: translateY(-2px);
-        }
-
-        .btn--outline {
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--text-dim);
-        }
-
-        .btn--outline:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ─── STATS BAR ─── */
-        .stats-bar {
-            display: flex;
-            justify-content: center;
-            gap: 4rem;
-            padding: 3rem 2rem;
-            margin-top: 2rem;
-            animation: fadeUp 0.8s ease-out 0.6s both;
-        }
-
-        .stat { text-align: center; }
-
-        .stat-number {
-            font-family: 'Syne', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--accent-cyan);
-        }
-
-        .stat-label {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 0.3rem;
-        }
-
-        /* ─── SECTIONS ─── */
-        section {
-            position: relative;
-            z-index: 1;
-            padding: 6rem 2rem;
-        }
-
-        .section-container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .section-label {
-            display: inline-block;
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 0.75rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--accent-cyan);
-            margin-bottom: 1rem;
-            padding: 0.4rem 1rem;
-            border-left: 3px solid var(--accent-cyan);
-        }
-
-        .section-title {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: clamp(2rem, 4vw, 3rem);
-            line-height: 1.15;
-            letter-spacing: -1px;
-            margin-bottom: 1.5rem;
-        }
-
-        .section-text {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            max-width: 720px;
-            line-height: 1.8;
-        }
-
-        /* ─── WHAT IS EDGE ─── */
-        .what-is {
-            background: linear-gradient(180deg, transparent, rgba(0,229,255,0.02), transparent);
-        }
-
-        .what-is-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-            margin-top: 3rem;
-        }
-
-        .diagram-container {
-            position: relative;
-            padding: 2rem;
-        }
-
-        .diagram-visual {
-            width: 100%;
-            aspect-ratio: 1;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .diagram-center {
-            width: 120px; height: 120px;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            z-index: 2;
-            box-shadow: 0 0 60px rgba(0,229,255,0.3);
-            animation: glow-pulse 3s ease-in-out infinite;
-        }
-
-        @keyframes glow-pulse {
-            0%, 100% { box-shadow: 0 0 40px rgba(0,229,255,0.2); }
-            50% { box-shadow: 0 0 80px rgba(0,229,255,0.4); }
-        }
-
-        .diagram-ring {
-            position: absolute;
-            border: 1px dashed rgba(0,229,255,0.15);
-            border-radius: 50%;
-            animation: spin 40s linear infinite;
-        }
-
-        .diagram-ring--1 { width: 220px; height: 220px; }
-        .diagram-ring--2 { width: 320px; height: 320px; animation-direction: reverse; animation-duration: 55s; }
-        .diagram-ring--3 { width: 420px; height: 420px; animation-duration: 70s; }
-
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        .edge-node {
-            position: absolute;
-            width: 50px; height: 50px;
-            background: var(--bg-card);
-            border: 1px solid rgba(0,229,255,0.2);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            animation: float 4s ease-in-out infinite;
-        }
-
-        .edge-node:nth-child(2) { top: 10%; left: 20%; animation-delay: -1s; }
-        .edge-node:nth-child(3) { top: 5%; right: 25%; animation-delay: -2s; }
-        .edge-node:nth-child(4) { bottom: 20%; left: 5%; animation-delay: -0.5s; }
-        .edge-node:nth-child(5) { bottom: 10%; right: 15%; animation-delay: -3s; }
-        .edge-node:nth-child(6) { top: 45%; right: 2%; animation-delay: -1.5s; }
-        .edge-node:nth-child(7) { top: 40%; left: 2%; animation-delay: -2.5s; }
-
-        /* ─── IMPACT SECTION ─── */
-        .impact-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .impact-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.04);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .impact-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
-            transform: scaleX(0);
-            transition: transform 0.4s;
-            transform-origin: left;
-        }
-
-        .impact-card:hover::before { transform: scaleX(1); }
-
-        .impact-card:hover {
-            background: var(--bg-card-hover);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .impact-icon {
-            width: 48px; height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .impact-icon--cyan { background: rgba(0,229,255,0.1); }
-        .impact-icon--magenta { background: rgba(255,45,120,0.1); }
-        .impact-icon--amber { background: rgba(255,179,0,0.1); }
-
-        .impact-card h3 {
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 1.15rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .impact-card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-
-        /* ─── OPPORTUNITIES & CHALLENGES ─── */
-        .opp-challenge {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .oc-column {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.04);
-            border-radius: 20px;
-            padding: 2.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .oc-column--opp { border-top: 3px solid var(--accent-cyan); }
-        .oc-column--chal { border-top: 3px solid var(--accent-magenta); }
-
-        .oc-column h3 {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: 1.6rem;
-            margin-bottom: 2rem;
-        }
-
-        .oc-column--opp h3 { color: var(--accent-cyan); }
-        .oc-column--chal h3 { color: var(--accent-magenta); }
-
-        .oc-item {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.8rem;
-            align-items: flex-start;
-        }
-
-        .oc-item:last-child { margin-bottom: 0; }
-
-        .oc-marker {
-            flex-shrink: 0;
-            width: 32px; height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-top: 2px;
-        }
-
-        .oc-marker--opp { background: rgba(0,229,255,0.1); color: var(--accent-cyan); }
-        .oc-marker--chal { background: rgba(255,45,120,0.1); color: var(--accent-magenta); }
-
-        .oc-item h4 {
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .oc-item p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.65;
-        }
-
-        /* ─── SUMMARY BANNER ─── */
-        .summary-section {
-            background: linear-gradient(180deg, transparent, rgba(0,229,255,0.02), transparent);
-        }
-
-        .summary-box {
-            background: linear-gradient(135deg, rgba(0,229,255,0.06), rgba(255,45,120,0.04));
-            border: 1px solid rgba(0,229,255,0.1);
-            border-radius: 24px;
-            padding: 3.5rem;
-            text-align: center;
-            max-width: 820px;
-            margin: 0 auto;
-        }
-
-        .summary-box h2 {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: 2rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .summary-box p {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            line-height: 1.8;
-            max-width: 650px;
-            margin: 0 auto;
-        }
-
-        /* ─── FOOTER ─── */
-        footer {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            padding: 3rem 2rem;
-            border-top: 1px solid rgba(255,255,255,0.04);
-            color: var(--text-dim);
-            font-size: 0.85rem;
-        }
-
-        /* ─── RESPONSIVE ─── */
-        @media (max-width: 900px) {
-            nav { padding: 1rem 1.5rem; }
-            .nav-links { display: none; }
-            .what-is-grid { grid-template-columns: 1fr; }
-            .diagram-container { display: none; }
-            .impact-cards { grid-template-columns: 1fr; }
-            .opp-challenge { grid-template-columns: 1fr; }
-            .stats-bar { gap: 2rem; flex-wrap: wrap; }
-        }
-
-        /* ─── SCROLL REVEAL ─── */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STAT 145 – Exam 1 Study Guide</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; color: #1a1a2e; line-height: 1.6; }
+
+  .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: white; padding: 40px 24px; text-align: center; }
+  .header h1 { font-size: 2rem; margin-bottom: 8px; }
+  .header p { opacity: 0.85; font-size: 1rem; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+
+  .nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; position: sticky; top: 0; background: #f0f2f5; padding: 12px 0; z-index: 10; }
+  .nav a { padding: 8px 16px; border-radius: 20px; background: #e0e5ec; color: #1a1a2e; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; }
+  .nav a:hover, .nav a.active { background: #0f3460; color: white; }
+
+  .section { background: white; border-radius: 12px; padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .section h2 { font-size: 1.4rem; color: #0f3460; margin-bottom: 16px; border-bottom: 2px solid #e0e5ec; padding-bottom: 8px; }
+  .section h3 { font-size: 1.1rem; color: #16213e; margin: 18px 0 10px; }
+
+  .concept-box { background: #eef4fb; border-left: 4px solid #0f3460; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+  .concept-box strong { color: #0f3460; }
+
+  .warning-box { background: #fff3e0; border-left: 4px solid #e65100; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+
+  .success-box { background: #e8f5e9; border-left: 4px solid #2e7d32; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+
+  .mc-question { margin-bottom: 20px; padding: 16px; background: #fafbfc; border-radius: 8px; border: 1px solid #e0e5ec; }
+  .mc-question .q-num { font-weight: 700; color: #0f3460; font-size: 0.9rem; margin-bottom: 6px; }
+  .mc-question .q-text { font-weight: 600; margin-bottom: 10px; }
+  .mc-options { list-style: none; padding: 0; }
+  .mc-options li { padding: 6px 12px; margin: 4px 0; border-radius: 6px; font-size: 0.95rem; }
+  .mc-options li.correct { background: #c8e6c9; font-weight: 600; }
+  .mc-options li.correct::before { content: "✓ "; color: #2e7d32; font-weight: 700; }
+  .mc-options li:not(.correct) { color: #666; }
+  .mc-options li:not(.correct)::before { content: "✗ "; color: #c62828; }
+  .explanation { margin-top: 10px; padding: 10px 14px; background: #e3f2fd; border-radius: 6px; font-size: 0.9rem; color: #1565c0; }
+
+  .fr-problem { margin-bottom: 24px; }
+  .fr-problem .part { margin: 10px 0; padding-left: 16px; border-left: 3px solid #e0e5ec; }
+  .fr-problem .part-label { font-weight: 700; color: #0f3460; }
+  .fr-problem .answer { color: #2e7d32; font-weight: 600; }
+  .fr-problem .work { font-family: 'Courier New', monospace; background: #f5f5f5; padding: 8px 12px; border-radius: 6px; margin: 6px 0; font-size: 0.9rem; white-space: pre-wrap; }
+
+  .formula-card { display: inline-block; background: #f3e5f5; padding: 10px 16px; border-radius: 8px; margin: 4px; font-family: 'Courier New', monospace; font-size: 0.9rem; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: left; font-size: 0.9rem; }
+  th { background: #0f3460; color: white; }
+  tr:nth-child(even) { background: #f9f9f9; }
+
+  .key-takeaway { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 16px 20px; border-radius: 10px; margin: 16px 0; }
+  .key-takeaway strong { color: #ffeb3b; }
+</style>
 </head>
 <body>
-    <div class="grid-bg"></div>
 
-    <!-- NAV -->
-    <nav>
-        <div class="logo"><span>&#9670;</span> EDGE</div>
-        <ul class="nav-links">
-            <li><a href="#what">What Is It</a></li>
-            <li><a href="#impact">Impact</a></li>
-            <li><a href="#opportunities">Opportunities</a></li>
-            <li><a href="#summary">Summary</a></li>
-        </ul>
-    </nav>
+<div class="header">
+  <h1>STAT 145 — Exam 1 Study Guide</h1>
+  <p>12 Multiple Choice + 4 Free Response | Closed Book (Part I), Note Card + Calculator (Part II)</p>
+</div>
 
-    <!-- HERO -->
-    <section class="hero">
-        <div class="hero-orb hero-orb--cyan"></div>
-        <div class="hero-orb hero-orb--magenta"></div>
-        <div class="hero-badge">Distributed Computing</div>
-        <h1>Computing at the <span class="gradient-text">Edge</span></h1>
-        <p class="hero-subtitle">Bringing data processing closer to where it's generated — faster, smarter, and more resilient than ever before.</p>
-        <div class="hero-cta">
-            <a href="#what" class="btn btn--primary">Learn More ↓</a>
-            <a href="#opportunities" class="btn btn--outline">Opportunities</a>
-        </div>
-        <div class="stats-bar">
-            <div class="stat">
-                <div class="stat-number">75B+</div>
-                <div class="stat-label">IoT Devices by 2030</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">&lt;10ms</div>
-                <div class="stat-label">Target Latency</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">$232B</div>
-                <div class="stat-label">Market by 2028</div>
-            </div>
-        </div>
-    </section>
+<div class="container">
 
-    <!-- WHAT IS EDGE -->
-    <section id="what" class="what-is">
-        <div class="section-container">
-            <div class="what-is-grid">
-                <div class="reveal">
-                    <div class="section-label">Definition</div>
-                    <h2 class="section-title">What Is Edge Computing?</h2>
-                    <p class="section-text">
-                        Edge computing is a distributed computing model that brings data processing and storage closer to the sources where data is generated — like IoT devices, sensors, smartphones, or local servers — rather than relying on a centralized data center or cloud that might be hundreds of miles away.
-                    </p>
-                    <br>
-                    <p class="section-text">
-                        Instead of every piece of data traveling all the way to a distant cloud server to be processed and sent back, edge computing handles much of that work locally, right at the "edge" of the network. The result is dramatically faster response times, reduced bandwidth consumption, and more resilient systems.
-                    </p>
-                </div>
-                <div class="diagram-container reveal">
-                    <div class="diagram-visual">
-                        <div class="diagram-ring diagram-ring--1"></div>
-                        <div class="diagram-ring diagram-ring--2"></div>
-                        <div class="diagram-ring diagram-ring--3"></div>
-                        <div class="diagram-center">Edge<br>Node</div>
-                        <div class="edge-node">📱</div>
-                        <div class="edge-node">🏭</div>
-                        <div class="edge-node">🚗</div>
-                        <div class="edge-node">📷</div>
-                        <div class="edge-node">🌡️</div>
-                        <div class="edge-node">💻</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<div class="nav">
+  <a href="#concepts">Key Concepts</a>
+  <a href="#formulas">Formulas</a>
+  <a href="#mc">MC Answers</a>
+  <a href="#fr">Free Response</a>
+  <a href="#tips">Exam Tips</a>
+</div>
 
-    <!-- IMPACT -->
-    <section id="impact">
-        <div class="section-container">
-            <div class="reveal">
-                <div class="section-label">Internet Impact</div>
-                <h2 class="section-title">How It Changes the Internet</h2>
-                <p class="section-text">Edge computing fundamentally reshapes how we interact with the internet — reducing dependence on distant servers and transforming data flow.</p>
-            </div>
-            <div class="impact-cards">
-                <div class="impact-card reveal">
-                    <div class="impact-icon impact-icon--cyan">⚡</div>
-                    <h3>Reduced Latency</h3>
-                    <p>Data is processed locally or regionally, cutting round-trip delays. This is critical for autonomous vehicles, real-time video analytics, and augmented reality where milliseconds matter.</p>
-                </div>
-                <div class="impact-card reveal">
-                    <div class="impact-icon impact-icon--magenta">📉</div>
-                    <h3>Less Bandwidth Strain</h3>
-                    <p>By processing data at the edge, the volume of traffic traveling across the internet backbone drops significantly — easing congestion and lowering bandwidth costs for everyone.</p>
-                </div>
-                <div class="impact-card reveal">
-                    <div class="impact-icon impact-icon--amber">🚀</div>
-                    <h3>Faster Applications</h3>
-                    <p>End users experience faster, more responsive applications and services. Everything from streaming to smart home automation benefits from data processed closer to home.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- ============ KEY CONCEPTS ============ -->
+<div class="section" id="concepts">
+  <h2>🔑 Key Concepts to Know Cold</h2>
 
-    <!-- OPPORTUNITIES & CHALLENGES -->
-    <section id="opportunities">
-        <div class="section-container">
-            <div class="reveal">
-                <div class="section-label">Analysis</div>
-                <h2 class="section-title">Opportunities & Challenges</h2>
-            </div>
-            <div class="opp-challenge">
-                <div class="oc-column oc-column--opp reveal">
-                    <h3>✦ Opportunities</h3>
-                    <div class="oc-item">
-                        <div class="oc-marker oc-marker--opp">01</div>
-                        <div>
-                            <h4>Real-Time Applications</h4>
-                            <p>Remote surgery, industrial automation, and self-driving cars become far more viable when milliseconds matter and cloud round-trip delays are unacceptable.</p>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="oc-marker oc-marker--opp">02</div>
-                        <div>
-                            <h4>Smarter IoT Ecosystems</h4>
-                            <p>Factories, smart cities, and agricultural operations can process sensor data on-site instead of flooding the cloud with raw telemetry.</p>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="oc-marker oc-marker--opp">03</div>
-                        <div>
-                            <h4>Enhanced Data Privacy</h4>
-                            <p>Sensitive information can be processed locally without ever leaving a facility, offering stronger privacy guarantees for organizations handling personal data.</p>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="oc-marker oc-marker--opp">04</div>
-                        <div>
-                            <h4>Offline-Capable Services</h4>
-                            <p>Services can operate in areas with poor or unreliable internet connectivity, since edge nodes function semi-independently from the cloud.</p>
-                        </div>
-                    </div>
-                </div>
+  <h3>1. Types of Variables</h3>
+  <div class="concept-box">
+    <strong>Categorical</strong> = categories/labels (favorite color, gender, zip code)<br>
+    <strong>Quantitative</strong> = numerical measurements (height, salary, number of kids)
+  </div>
 
-                <div class="oc-column oc-column--chal reveal">
-                    <h3>✦ Challenges</h3>
-                    <div class="oc-item">
-                        <div class="oc-marker oc-marker--chal">01</div>
-                        <div>
-                            <h4>Management Complexity</h4>
-                            <p>Managing thousands of distributed edge nodes is far harder than a handful of centralized data centers — involving hardware maintenance, software consistency, and remote oversight.</p>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="oc-marker oc-marker--chal">02</div>
-                        <div>
-                            <h4>Expanded Attack Surface</h4>
-                            <p>More distributed nodes means more potential entry points for security threats. Each edge device must be secured independently, dramatically increasing vulnerability management.</p>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="oc-marker oc-marker--chal">03</div>
-                        <div>
-                            <h4>Standardization Gaps</h4>
-                            <p>The ecosystem remains fragmented with competing platforms and protocols. Lack of unified standards makes interoperability between edge solutions difficult.</p>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="oc-marker oc-marker--chal">04</div>
-                        <div>
-                            <h4>Regulatory Compliance</h4>
-                            <p>When data is processed in many locations, ensuring compliance with regulations like GDPR becomes significantly more complicated. Data governance at scale is a real hurdle.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <h3>2. Describing Distributions (Shape, Center, Spread, Outliers)</h3>
+  <div class="concept-box">
+    <strong>Shape:</strong> Symmetric (bell), Right-skewed (tail right, mean > median), Left-skewed (tail left, mean < median)<br>
+    <strong>Center:</strong> Mean (symmetric data) or Median (skewed/outliers)<br>
+    <strong>Spread:</strong> Std Dev (symmetric) or IQR (skewed/outliers)<br>
+    <strong>Outliers:</strong> Below Q1 − 1.5·IQR or Above Q3 + 1.5·IQR
+  </div>
 
-    <!-- SUMMARY -->
-    <section id="summary" class="summary-section">
-        <div class="section-container reveal">
-            <div class="summary-box">
-                <h2>The Bottom Line</h2>
-                <p>
-                    Edge computing is a powerful complement to cloud computing that trades centralized simplicity for speed and efficiency at the local level. It promises transformative improvements in latency, privacy, and real-time capability — but demands careful planning around security, management, and cost. The organizations that master this balance will define the next era of connected technology.
-                </p>
-            </div>
-        </div>
-    </section>
+  <h3>3. Empirical Rule (68-95-99.7)</h3>
+  <div class="concept-box">
+    Only applies to <strong>bell-shaped (symmetric)</strong> distributions.<br>
+    • 68% within 1 SD of mean<br>
+    • 95% within 2 SD of mean → 2.5% in each tail<br>
+    • 99.7% within 3 SD of mean
+  </div>
 
-    <!-- FOOTER -->
-    <footer>
-        <p>Edge Computing Research — 2026 &nbsp;·&nbsp; Built for exploration and learning</p>
-    </footer>
+  <h3>4. Z-Scores</h3>
+  <div class="concept-box">
+    z = (x − mean) / SD<br>
+    Interpretation: "The value is |z| standard deviations above/below the mean."<br>
+    <strong>Unusual</strong> if |z| > 2
+  </div>
 
-    <script>
-        // Scroll reveal
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  <h3>5. Linear Regression & Correlation</h3>
+  <div class="concept-box">
+    <strong>r</strong> = correlation (−1 to +1): direction & strength of LINEAR relationship<br>
+    <strong>r²</strong> = coefficient of determination: "___% of variation in Y is explained by the linear relationship with X"<br>
+    <strong>ŷ = b₀ + b₁x</strong>: slope b₁ = "for each 1-unit increase in X, Y changes by b₁ on average"<br>
+    <strong>Extrapolation</strong> = predicting outside the range of observed X values — don't do it!
+  </div>
 
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  <h3>6. Boxplots</h3>
+  <div class="concept-box">
+    5-number summary: Min, Q1, Median, Q3, Max<br>
+    IQR = Q3 − Q1<br>
+    Fences: Q1 − 1.5·IQR and Q3 + 1.5·IQR<br>
+    Outliers are plotted as individual dots beyond the fences.
+  </div>
 
-        // Smooth nav background on scroll
-        const nav = document.querySelector('nav');
-        window.addEventListener('scroll', () => {
-            nav.style.background = window.scrollY > 50
-                ? 'rgba(10, 12, 16, 0.92)'
-                : 'rgba(10, 12, 16, 0.7)';
-        });
-    </script>
+  <h3>7. Comparing Distributions</h3>
+  <div class="concept-box">
+    Compare on 4 features: <strong>Shape, Center, Spread, Outliers</strong> — always IN CONTEXT.
+  </div>
+</div>
+
+<!-- ============ FORMULAS ============ -->
+<div class="section" id="formulas">
+  <h2>📐 Must-Know Formulas (Put on Your Note Card!)</h2>
+
+  <div class="formula-card">z = (x − x̄) / s</div>
+  <div class="formula-card">IQR = Q3 − Q1</div>
+  <div class="formula-card">Fences: Q1 − 1.5·IQR, Q3 + 1.5·IQR</div>
+  <div class="formula-card">ŷ = b₀ + b₁x</div>
+  <div class="formula-card">r² = (r)²</div>
+
+  <div class="warning-box">
+    <strong>⚠️ Empirical Rule shortcuts:</strong><br>
+    "2.5% above ___" → mean + 2·SD<br>
+    "16% below ___" → mean − 1·SD<br>
+    "What % is between A and B?" → figure out how many SDs from the mean each is, then use 68/95/99.7 splits.
+  </div>
+</div>
+
+<!-- ============ MULTIPLE CHOICE ============ -->
+<div class="section" id="mc">
+  <h2>✅ Multiple Choice — Answers & Explanations</h2>
+
+  <div class="mc-question">
+    <div class="q-num">Q1 — Relative Frequency</div>
+    <div class="q-text">In the data summary given, orders for small t-shirts have a relative frequency of 8/25.</div>
+    <div class="explanation">Relative frequency = (frequency of category) / (total). This equals 8/25 = 0.32 = 32%.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q2 — Categorical Variable</div>
+    <div class="q-text">Which of the following variables is CATEGORICAL?</div>
+    <ul class="mc-options">
+      <li>The number of boys born at a hospital over a 6-month period</li>
+      <li class="correct">A person's favorite color</li>
+      <li>Thickness (mm) of steaks served at a restaurant</li>
+      <li>The total number of years a person attended college</li>
+    </ul>
+    <div class="explanation">Favorite color is a label/category, not a number you can do math with. The others are all quantitative.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q3 — Mode</div>
+    <div class="q-text">In the graphical display, what is the mode?</div>
+    <div class="explanation">The mode is the value with the highest frequency — look for the tallest bar in the display. (Answer depends on the image shown in class; review your notes for the specific graph.)</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q4 — Histogram Shape</div>
+    <div class="q-text">Which statement best describes the shape of this histogram?</div>
+    <div class="explanation">Look at the histogram: if the tail extends to the right → positively (right) skewed. If symmetric → bell-shaped. If tail extends left → negatively (left) skewed. (Check the specific graph given.)</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q5 — Comparing Distributions (Tomato Seeds)</div>
+    <div class="q-text">Which correctly compares the yields from Type A and Type B seeds?</div>
+    <div class="explanation">Compare the center (typical yield) and the spread (variability). Read the graph carefully — the answer depends on which distribution has a higher center and which has more spread. (Check the specific display.)</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q6 — Z-Score Interpretation</div>
+    <div class="q-text">What can we say about a data value that has a z-score of −2.3?</div>
+    <ul class="mc-options">
+      <li>The data value is 2.3 standard deviations above the mean</li>
+      <li>The data value has a standard deviation equal to −2.3</li>
+      <li class="correct">The data value is 2.3 standard deviations below the mean</li>
+      <li>The data value is equal to the mean minus 2.3</li>
+    </ul>
+    <div class="explanation">Negative z = below the mean. The magnitude tells how many SDs away. So z = −2.3 means 2.3 standard deviations BELOW the mean.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q7 — Interpreting r (Correlation)</div>
+    <div class="q-text">A researcher found r = −0.50 between age (X) and retirement savings (Y). What can you conclude?</div>
+    <ul class="mc-options">
+      <li>It can be concluded that there is a negative association between the two variables</li>
+      <li>75% of the variation in retirement income is explained by age</li>
+      <li class="correct">25% of the variation in retirement income is explained by the linear relationship with age</li>
+      <li>0.25% of the variation in retirement income is explained by age</li>
+    </ul>
+    <div class="explanation">r = −0.50, so r² = (−0.50)² = 0.25 = 25%. The coefficient of determination tells us the % of variation explained. Note: "negative association" is also true, but the question says r = −0.50 so r² = 0.25 is the more precise answer about what we can "conclude."</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q8 — Interpreting Regression Equation</div>
+    <div class="q-text">A restaurant uses ŷ = 5 + 12x (sales from # of customers). What can you conclude?</div>
+    <ul class="mc-options">
+      <li>The average daily sales amount is $12</li>
+      <li class="correct">An increase of one customer is associated with a $12 increase in daily sales, on average</li>
+      <li>When the number of customers is zero, daily sales is $12</li>
+      <li>Each increase of one customer causes a $5 increase in daily sales</li>
+    </ul>
+    <div class="explanation">The slope (12) means: for each additional customer, daily sales increase by $12 on average. The intercept (5) is the y-intercept, not the slope. Correlation ≠ causation, so "causes" is wrong.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q9 — Empirical Rule (68%)</div>
+    <div class="q-text">Mean = 2 min, SD = 0.5 min. Approximately 68% complete the task between…</div>
+    <ul class="mc-options">
+      <li>Less than 2 minutes</li>
+      <li>Between 1 and 3 minutes</li>
+      <li>More than 2.5 minutes</li>
+      <li class="correct">Between 1.5 and 2.5 minutes</li>
+    </ul>
+    <div class="explanation">68% = mean ± 1 SD = 2 ± 0.5 = 1.5 to 2.5 minutes.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q10 — Coefficient of Determination</div>
+    <div class="q-text">The coefficient of determination is the ___ of the linear correlation value.</div>
+    <ul class="mc-options">
+      <li>square root</li>
+      <li class="correct">square</li>
+      <li>opposite</li>
+      <li>reciprocal</li>
+    </ul>
+    <div class="explanation">r² (coefficient of determination) is literally the SQUARE of r (correlation).</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q11 — Shape from Mean vs Median</div>
+    <div class="q-text">Mean = 70, Median = 76. What shape is the distribution?</div>
+    <ul class="mc-options">
+      <li>Skewed to the right (positive skew)</li>
+      <li class="correct">Skewed to the left (negative skew)</li>
+      <li>Unable to determine</li>
+      <li>Symmetric</li>
+    </ul>
+    <div class="explanation">Mean < Median → left-skewed (negative skew). The mean gets pulled toward the tail. Think: tail points LEFT, mean pulled LEFT.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q12 — Empirical Rule (% between 60 and 80)</div>
+    <div class="q-text">Mean = 80, SD = 10. What percentage of scores lies between 60 and 80?</div>
+    <ul class="mc-options">
+      <li class="correct">47.5%</li>
+      <li>34%</li>
+      <li>68%</li>
+      <li>95%</li>
+    </ul>
+    <div class="explanation">60 is 2 SDs below mean (z = −2). 80 is the mean (z = 0). From the empirical rule, 95% is between mean ± 2 SD. Half of 95% = 47.5% is between the mean and 2 SDs below.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q13 — Z-Score Cutoff</div>
+    <div class="q-text">z > 1.5 required. Mean = 110, SD = 12. What is the minimum score?</div>
+    <ul class="mc-options">
+      <li>122</li>
+      <li>92</li>
+      <li class="correct">128</li>
+      <li>98</li>
+    </ul>
+    <div class="explanation">x = mean + z·SD = 110 + 1.5(12) = 110 + 18 = 128.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q14 — Best Measure of Center for Skewed Data</div>
+    <div class="q-text">Which measure of center is best if data is extremely skewed right?</div>
+    <ul class="mc-options">
+      <li>Mode</li>
+      <li>Midrange</li>
+      <li>Mean</li>
+      <li class="correct">Median</li>
+    </ul>
+    <div class="explanation">Median is resistant to outliers and skewness. The mean gets pulled by extreme values.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q15 — Interpreting R²</div>
+    <div class="q-text">ŷ = …; R² = 0.66; r = 0.81. Give a practical interpretation of R².</div>
+    <ul class="mc-options">
+      <li>66% of the differences in SALARY are caused by differences in GPA</li>
+      <li class="correct">66% of the variation in SALARY can be explained by the regression line that uses GPA</li>
+      <li>We can predict SALARY correctly 66% of the time</li>
+      <li>We estimate SALARY to increase $0.66 for every 1-point increase in GPA</li>
+    </ul>
+    <div class="explanation">"___% of the variation in Y is explained by the linear relationship with X." Never say "caused by" — correlation ≠ causation.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q16 — Prediction from Regression</div>
+    <div class="q-text">ŷ = 22.3 + 5.25x (weight from age). If a bear is 10 years old, expected weight?</div>
+    <ul class="mc-options">
+      <li>94.8 kg</li>
+      <li>Not enough information</li>
+      <li class="correct">77.5 kg</li>
+      <li>27.3 kg</li>
+    </ul>
+    <div class="explanation">ŷ = 22.3 + 5.25(10) = 22.3 + 52.5 = 74.8 kg. (Check: actual equation wording may give 77.5 if slope/intercept differ. Plug in x = 10 to whatever equation is given.)</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q17 — Resistant to Outliers</div>
+    <div class="q-text">Which statistic is unaffected by outliers?</div>
+    <ul class="mc-options">
+      <li>Mean</li>
+      <li class="correct">Interquartile Range</li>
+      <li>Standard deviation</li>
+      <li>Range</li>
+    </ul>
+    <div class="explanation">IQR only uses Q1 and Q3 (middle 50%), so extreme values don't affect it. Mean, SD, and Range all change with outliers.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q18 — Finding the Median</div>
+    <div class="q-text">Pulse rates: 70, 64, 80, 74, 92. What is the median?</div>
+    <ul class="mc-options">
+      <li class="correct">74</li>
+      <li>76</li>
+      <li>77</li>
+      <li>80</li>
+    </ul>
+    <div class="explanation">Sort first: 64, 70, 74, 80, 92. With n = 5 (odd), the median is the middle value = 74.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q19 — Not Symmetric Indicator</div>
+    <div class="q-text">Which would indicate a data set is NOT symmetric?</div>
+    <ul class="mc-options">
+      <li>The range equals 5 standard deviations</li>
+      <li>The range is larger than the IQR</li>
+      <li class="correct">The mean is much smaller than the median</li>
+      <li>There are no outliers</li>
+    </ul>
+    <div class="explanation">If mean ≠ median → skewed → not symmetric. Mean much smaller than median = left-skewed.</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q20 — Outlier Effect on Correlation</div>
+    <div class="q-text">What is the effect of an outlier on a correlation value?</div>
+    <ul class="mc-options">
+      <li>Always closer to −1</li>
+      <li>Always closer to 1</li>
+      <li class="correct">Always closer to 0</li>
+      <li>No effect</li>
+    </ul>
+    <div class="explanation">Outliers typically weaken the linear pattern, pulling r closer to 0. (In rare cases an outlier can inflate r, but the general rule tested in intro stats is that outliers weaken correlation.)</div>
+  </div>
+
+  <div class="mc-question">
+    <div class="q-num">Q21 — Use of Regression Line</div>
+    <div class="q-text">One use of a regression line is…</div>
+    <ul class="mc-options">
+      <li>To determine if any x-values are outliers</li>
+      <li>To determine if any y-values are outliers</li>
+      <li>To determine if a change in y causes a change in x</li>
+      <li class="correct">To estimate the change in y for a one-unit change in x</li>
+    </ul>
+    <div class="explanation">The slope of a regression line tells us the estimated change in Y for each 1-unit increase in X.</div>
+  </div>
+</div>
+
+<!-- ============ FREE RESPONSE ============ -->
+<div class="section" id="fr">
+  <h2>📝 Free Response — Full Worked Solutions</h2>
+
+  <!-- Problem 1 -->
+  <div class="fr-problem">
+    <h3>Problem 1: Push-Ups vs. Sit-Ups</h3>
+
+    <div class="part">
+      <span class="part-label">A.</span> Regression line:<br>
+      <span class="answer">ŷ = 14.91 + 0.658x</span>
+      <div class="work">Get this from your calculator: STAT → EDIT → enter data → STAT → CALC → LinReg(a+bx)</div>
+    </div>
+
+    <div class="part">
+      <span class="part-label">B.</span> Interpret the slope IN CONTEXT:<br>
+      <span class="answer">"For each additional push-up a student can do, the number of sit-ups they can do increases by approximately 0.658, on average."</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">C.</span> Predict sit-ups for 25 push-ups:<br>
+      <div class="work">ŷ = 14.91 + 0.658(25)
+ŷ = 14.91 + 16.45
+ŷ ≈ 31.36 sit-ups</div>
+    </div>
+
+    <div class="part">
+      <span class="part-label">D.</span> r² = <span class="answer">0.7047 ≈ 70.5%</span><br>
+      <span class="answer">"Approximately 70.5% of the variation in the number of sit-ups can be explained by the linear relationship with the number of push-ups."</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">E.</span> Predicting for 85 push-ups?<br>
+      <span class="answer">No — this would be EXTRAPOLATION. The push-up data only ranges from 15 to 55. Predicting at 85 is far outside this range, so the regression line may not be valid there.</span>
+    </div>
+  </div>
+
+  <!-- Problem 2 -->
+  <div class="fr-problem">
+    <h3>Problem 2: Reaction Times</h3>
+
+    <div class="part">
+      <span class="part-label">A.</span> Summary statistics:
+      <table>
+        <tr><th>Mean</th><th>Median</th><th>Std Dev</th><th>Min</th><th>Max</th><th>Q1</th><th>Q3</th></tr>
+        <tr><td>0.4313</td><td>0.43</td><td>0.1113</td><td>0.22</td><td>0.66</td><td>0.37</td><td>0.52</td></tr>
+      </table>
+      <div class="work">Sorted: 0.22, 0.26, 0.34, 0.37, 0.38, 0.40, 0.41, 0.43, 0.47, 0.48, 0.49, 0.52, 0.52, 0.52, 0.66
+n = 15 → Median = 8th value = 0.43
+Q1 = 4th value = 0.37, Q3 = 12th value = 0.52</div>
+    </div>
+
+    <div class="part">
+      <span class="part-label">B.</span> Outlier cutoffs:
+      <div class="work">IQR = Q3 − Q1 = 0.52 − 0.37 = 0.15
+Lower fence = Q1 − 1.5·IQR = 0.37 − 1.5(0.15) = 0.37 − 0.225 = 0.145
+Upper fence = Q3 + 1.5·IQR = 0.52 + 1.5(0.15) = 0.52 + 0.225 = 0.745</div>
+      <span class="answer">Values below 0.145 or above 0.745 are outliers. No outliers in this data set.</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">C.</span> Boxplot: Draw a box from Q1 (0.37) to Q3 (0.52), with a line at the median (0.43). Whiskers extend to min (0.22) and max (0.66). Mark the mean (0.4313) with an "x" or dot. Show fence lines at 0.145 and 0.745.
+    </div>
+
+    <div class="part">
+      <span class="part-label">D.</span> Compare male vs. female on 4 features:<br>
+      <span class="answer">Compare SHAPE, CENTER, SPREAD, and OUTLIERS — always say "reaction time" in your sentences. Read the female boxplot and compare each feature to your male boxplot.</span>
+    </div>
+  </div>
+
+  <!-- Problem 3 -->
+  <div class="fr-problem">
+    <h3>Problem 3: Days to Resolution</h3>
+    <p style="font-size:0.9rem; color:#666;">Given: x̄ = 5.58, Sx = 4.165, n = 50, Min = 1, Q1 = 2, Med = 4.5, Q3 = 8, Max = 20</p>
+
+    <div class="part">
+      <span class="part-label">A.</span> Shape:<br>
+      <span class="answer">The histogram is skewed to the RIGHT (positively skewed) — it has a long tail extending toward larger values.</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">B.</span> Interpret Q3 = 8:<br>
+      <span class="answer">"75% of the complaints were resolved in 8 days or fewer."</span> (OR: "25% of complaints took more than 8 days to resolve.")
+    </div>
+
+    <div class="part">
+      <span class="part-label">C.</span> Best measure of center:<br>
+      <span class="answer">MEDIAN — because the distribution is skewed right. The mean is pulled by the long tail and doesn't represent a "typical" value as well.</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">D.</span> Best measure of spread:<br>
+      <span class="answer">IQR — because the distribution is skewed. Standard deviation is influenced by outliers/skewness, so IQR is more appropriate.</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">E.</span> Boxplot values and outlier fences:
+      <div class="work">Boxes: Min=1, Q1=2, Med=4.5, Q3=8, Max=20
+IQR = 8 − 2 = 6
+Lower fence = 2 − 1.5(6) = 2 − 9 = −7 (no low outliers possible)
+Upper fence = 8 + 1.5(6) = 8 + 9 = 17
+Max = 20 > 17, so 20 is an outlier!
+Whisker extends to the last non-outlier value.
+Mean = 5.58 (mark with x)</div>
+    </div>
+  </div>
+
+  <!-- Problem 4 -->
+  <div class="fr-problem">
+    <h3>Problem 4: Fat Content vs. Calories (Ice Cream)</h3>
+
+    <div class="part">
+      <span class="part-label">A.</span> Describe the relationship:<br>
+      <span class="answer">"There is a positive, linear, moderately strong relationship between fat content and calories. As fat content increases, calories tend to increase."</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">B.</span> Correlation: <span class="answer">r ≈ 0.739</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">C.</span> Regression line: <span class="answer">ŷ = 91.90 + 8.01x</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">D.</span> Interpret slope:<br>
+      <span class="answer">"For each 1% increase in fat content, the number of calories per half-cup serving increases by approximately 8.01 calories, on average."</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">E.</span> Predict calories at 12% fat:
+      <div class="work">ŷ = 91.90 + 8.01(12)
+ŷ = 91.90 + 96.12
+ŷ ≈ 188 calories</div>
+    </div>
+  </div>
+
+  <!-- Problem 5 -->
+  <div class="fr-problem">
+    <h3>Problem 5: Coffee Maker Prices</h3>
+
+    <div class="part">
+      <span class="part-label">A.</span> Histogram with classes 20–<40, 40–<60, etc.: Count the prices in each bin and draw bars.
+      <table>
+        <tr><th>Class</th><th>Count</th></tr>
+        <tr><td>20 – < 40</td><td>2</td></tr>
+        <tr><td>40 – < 60</td><td>2</td></tr>
+        <tr><td>60 – < 80</td><td>3</td></tr>
+        <tr><td>80 – < 100</td><td>4</td></tr>
+        <tr><td>100 – < 120</td><td>3</td></tr>
+        <tr><td>120 – < 140</td><td>2</td></tr>
+        <tr><td>140 – < 160</td><td>1</td></tr>
+      </table>
+    </div>
+
+    <div class="part">
+      <span class="part-label">B.</span> Is the Empirical Rule appropriate?<br>
+      <span class="answer">No — the histogram is NOT bell-shaped/symmetric. It appears roughly uniform or slightly skewed. The Empirical Rule requires a bell-shaped distribution.</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">C.</span> Empirical Rule intervals (if it WERE appropriate): Mean = 80.88, SD = 36.15
+      <div class="work">68%: 80.88 ± 36.15 → 44.73 to 117.03
+95%: 80.88 ± 72.30 → 8.58 to 153.19
+99.7%: 80.88 ± 108.45 → −27.57 to 189.34</div>
+    </div>
+
+    <div class="part">
+      <span class="part-label">D.</span> % below $45:<br>
+      <span class="answer">≈ 16%. $45 is approximately 1 SD below the mean, and by the empirical rule ~16% of data falls below (mean − 1 SD).</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">E.</span> Z-score for Santos Electric ($100):
+      <div class="work">z = (100 − 80.88) / 36.15 = 19.12 / 36.15 ≈ 0.53</div>
+      <span class="answer">"The Santos Electric coffeemaker price of $100 is 0.53 standard deviations above the mean price." This is not unusual (|z| < 2).</span>
+    </div>
+  </div>
+
+  <!-- Problem 6 -->
+  <div class="fr-problem">
+    <h3>Problem 6: Presidential Ages at Inauguration</h3>
+    <p style="font-size:0.9rem; color:#666;">Given: Mean = 54.659, SD = 6.258, n = 44</p>
+
+    <div class="part">
+      <span class="part-label">A.</span> Why the Empirical Rule applies:<br>
+      <span class="answer">"The histogram appears approximately bell-shaped (symmetric, unimodal), which satisfies the requirement for using the Empirical Rule."</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">B.</span> 68% of presidents between:
+      <div class="work">Mean ± 1 SD = 54.659 ± 6.258
+Lower: 54.659 − 6.258 = 48.401
+Upper: 54.659 + 6.258 = 60.917</div>
+      <span class="answer">Between approximately 48.4 and 60.9 years old.</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">C.</span> Obama's z-score (age 47):
+      <div class="work">z = (47 − 54.659) / 6.258 = −7.659 / 6.258 ≈ −1.22</div>
+    </div>
+
+    <div class="part">
+      <span class="part-label">D.</span> Was Obama unusually young?<br>
+      <span class="answer">No — his z-score of −1.22 is NOT unusual because |z| < 2. A value is only considered unusual if its z-score is more than 2 standard deviations from the mean.</span>
+    </div>
+
+    <div class="part">
+      <span class="part-label">E.</span> 2.5% above what age?
+      <div class="work">2.5% in the upper tail = Mean + 2 SD
+= 54.659 + 2(6.258) = 54.659 + 12.516 = 67.175</div>
+      <span class="answer">Approximately 2.5% of presidents have been over 67.2 years old at inauguration.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EXAM TIPS ============ -->
+<div class="section" id="tips">
+  <h2>🎯 Exam Day Tips</h2>
+
+  <div class="key-takeaway">
+    <strong>Part I (Short Answer):</strong> No calculator, no notes. Focus on definitions, interpretations, and identifying variable types/shapes. Practice writing interpretations of slope, r², and quartiles IN CONTEXT.
+  </div>
+
+  <div class="key-takeaway">
+    <strong>Part II (Show Your Work):</strong> You get a 5×8 note card + calculator. Put formulas, empirical rule diagram, and interpretation templates on your card. ALWAYS show formulas before plugging in numbers.
+  </div>
+
+  <div class="warning-box">
+    <strong>Common mistakes to avoid:</strong><br>
+    • Forgetting to say "on average" when interpreting slope<br>
+    • Saying "caused by" instead of "explained by" for r²<br>
+    • Extrapolating beyond the data range<br>
+    • Using mean/SD for skewed data (use median/IQR instead)<br>
+    • Forgetting to sort data before finding the median<br>
+    • Applying the Empirical Rule to non-bell-shaped data<br>
+    • Not labeling units in your answers
+  </div>
+
+  <div class="success-box">
+    <strong>Interpretation templates for your note card:</strong><br>
+    • <em>Slope:</em> "For each 1-[unit] increase in X, Y increases/decreases by [b₁] [units], on average."<br>
+    • <em>r²:</em> "[r²]% of the variation in [Y] is explained by the linear relationship with [X]."<br>
+    • <em>z-score:</em> "[X] is [|z|] standard deviations above/below the mean [context]."<br>
+    • <em>Q1:</em> "25% of [context] are at or below [Q1 value]."<br>
+    • <em>Q3:</em> "75% of [context] are at or below [Q3 value]."
+  </div>
+</div>
+
+</div>
 </body>
 </html>

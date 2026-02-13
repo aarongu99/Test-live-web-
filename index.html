@@ -2,633 +2,978 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STAT 145 – Exam 1 Study Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>STAT 145 — Exam 1 Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;600;700&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; color: #1a1a2e; line-height: 1.6; }
+:root {
+  --bg: #0a0c10;
+  --surface: #12151c;
+  --surface2: #1a1e28;
+  --surface3: #222838;
+  --border: #2a3040;
+  --border2: #353d50;
+  --text: #d8dce6;
+  --text-dim: #7a8498;
+  --text-bright: #f0f2f7;
+  --blue: #5ba4f5;
+  --blue-dim: rgba(91,164,245,0.12);
+  --orange: #f0884a;
+  --orange-dim: rgba(240,136,74,0.12);
+  --green: #5ec269;
+  --green-dim: rgba(94,194,105,0.12);
+  --red: #f06060;
+  --red-dim: rgba(240,96,96,0.10);
+  --purple: #b58af5;
+  --purple-dim: rgba(181,138,245,0.12);
+  --gold: #e8c44a;
+  --gold-dim: rgba(232,196,74,0.12);
+  --cyan: #4ad4d4;
+}
 
-  .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: white; padding: 40px 24px; text-align: center; }
-  .header h1 { font-size: 2rem; margin-bottom: 8px; }
-  .header p { opacity: 0.85; font-size: 1rem; }
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
-  .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+html { scroll-behavior:smooth; }
 
-  .nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; position: sticky; top: 0; background: #f0f2f5; padding: 12px 0; z-index: 10; }
-  .nav a { padding: 8px 16px; border-radius: 20px; background: #e0e5ec; color: #1a1a2e; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; }
-  .nav a:hover, .nav a.active { background: #0f3460; color: white; }
+body {
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:15px;
+  line-height:1.55;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  padding-bottom:80px;
+}
 
-  .section { background: white; border-radius: 12px; padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .section h2 { font-size: 1.4rem; color: #0f3460; margin-bottom: 16px; border-bottom: 2px solid #e0e5ec; padding-bottom: 8px; }
-  .section h3 { font-size: 1.1rem; color: #16213e; margin: 18px 0 10px; }
+/* ========== HEADER ========== */
+.hero {
+  padding:32px 20px 24px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before {
+  content:'';
+  position:absolute;
+  top:-40%;left:-20%;
+  width:140%;height:180%;
+  background:radial-gradient(ellipse at 50% 0%, rgba(91,164,245,0.08) 0%, transparent 60%),
+             radial-gradient(ellipse at 80% 100%, rgba(181,138,245,0.05) 0%, transparent 50%);
+  pointer-events:none;
+}
+.hero h1 {
+  font-family:'Fraunces',serif;
+  font-size:28px;
+  font-weight:700;
+  color:var(--text-bright);
+  letter-spacing:-0.5px;
+  position:relative;
+}
+.hero h1 span { color:var(--blue); }
+.hero p {
+  font-size:13px;
+  color:var(--text-dim);
+  margin-top:6px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  position:relative;
+}
 
-  .concept-box { background: #eef4fb; border-left: 4px solid #0f3460; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 12px 0; }
-  .concept-box strong { color: #0f3460; }
+/* ========== MODE TOGGLE ========== */
+.mode-bar {
+  display:flex;
+  gap:4px;
+  margin:0 16px 16px;
+  background:var(--surface);
+  border-radius:12px;
+  padding:4px;
+  border:1px solid var(--border);
+  position:sticky;
+  top:8px;
+  z-index:100;
+  backdrop-filter:blur(12px);
+}
+.mode-btn {
+  flex:1;
+  padding:10px 8px;
+  border:none;
+  border-radius:9px;
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  background:transparent;
+  color:var(--text-dim);
+  transition:all .2s;
+}
+.mode-btn.active {
+  background:var(--surface3);
+  color:var(--text-bright);
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
 
-  .warning-box { background: #fff3e0; border-left: 4px solid #e65100; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+/* ========== NAV PILLS ========== */
+.nav-scroll {
+  overflow-x:auto;
+  padding:0 16px 12px;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.nav-scroll::-webkit-scrollbar { display:none; }
+.nav-pills {
+  display:flex;
+  gap:6px;
+  width:max-content;
+}
+.nav-pill {
+  padding:6px 14px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text-dim);
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:all .2s;
+  text-decoration:none;
+}
+.nav-pill:hover,.nav-pill.active {
+  border-color:var(--blue);
+  color:var(--blue);
+  background:var(--blue-dim);
+}
 
-  .success-box { background: #e8f5e9; border-left: 4px solid #2e7d32; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+/* ========== SECTIONS ========== */
+.content { padding:0 16px; }
 
-  .mc-question { margin-bottom: 20px; padding: 16px; background: #fafbfc; border-radius: 8px; border: 1px solid #e0e5ec; }
-  .mc-question .q-num { font-weight: 700; color: #0f3460; font-size: 0.9rem; margin-bottom: 6px; }
-  .mc-question .q-text { font-weight: 600; margin-bottom: 10px; }
-  .mc-options { list-style: none; padding: 0; }
-  .mc-options li { padding: 6px 12px; margin: 4px 0; border-radius: 6px; font-size: 0.95rem; }
-  .mc-options li.correct { background: #c8e6c9; font-weight: 600; }
-  .mc-options li.correct::before { content: "✓ "; color: #2e7d32; font-weight: 700; }
-  .mc-options li:not(.correct) { color: #666; }
-  .mc-options li:not(.correct)::before { content: "✗ "; color: #c62828; }
-  .explanation { margin-top: 10px; padding: 10px 14px; background: #e3f2fd; border-radius: 6px; font-size: 0.9rem; color: #1565c0; }
+.section {
+  margin-bottom:20px;
+  animation:fadeUp .4s ease both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(12px); }
+  to { opacity:1; transform:translateY(0); }
+}
 
-  .fr-problem { margin-bottom: 24px; }
-  .fr-problem .part { margin: 10px 0; padding-left: 16px; border-left: 3px solid #e0e5ec; }
-  .fr-problem .part-label { font-weight: 700; color: #0f3460; }
-  .fr-problem .answer { color: #2e7d32; font-weight: 600; }
-  .fr-problem .work { font-family: 'Courier New', monospace; background: #f5f5f5; padding: 8px 12px; border-radius: 6px; margin: 6px 0; font-size: 0.9rem; white-space: pre-wrap; }
+.section-head {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px 16px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px 14px 0 0;
+  cursor:pointer;
+  user-select:none;
+  position:relative;
+  overflow:hidden;
+}
+.section-head::before {
+  content:'';
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:3px;
+  border-radius:3px;
+}
+.section-head[data-color="blue"]::before { background:var(--blue); }
+.section-head[data-color="orange"]::before { background:var(--orange); }
+.section-head[data-color="green"]::before { background:var(--green); }
+.section-head[data-color="red"]::before { background:var(--red); }
+.section-head[data-color="purple"]::before { background:var(--purple); }
+.section-head[data-color="gold"]::before { background:var(--gold); }
 
-  .formula-card { display: inline-block; background: #f3e5f5; padding: 10px 16px; border-radius: 8px; margin: 4px; font-family: 'Courier New', monospace; font-size: 0.9rem; }
+.section-icon {
+  font-size:20px;
+  flex-shrink:0;
+}
+.section-title {
+  font-weight:700;
+  font-size:15px;
+  color:var(--text-bright);
+  flex:1;
+}
+.section-arrow {
+  font-size:12px;
+  color:var(--text-dim);
+  transition:transform .25s;
+}
+.section.open .section-arrow { transform:rotate(180deg); }
 
-  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
-  th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: left; font-size: 0.9rem; }
-  th { background: #0f3460; color: white; }
-  tr:nth-child(even) { background: #f9f9f9; }
+.section-body {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-top:none;
+  border-radius:0 0 14px 14px;
+  padding:0;
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .35s ease, padding .35s ease;
+}
+.section.open .section-body {
+  max-height:3000px;
+  padding:16px;
+}
 
-  .key-takeaway { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 16px 20px; border-radius: 10px; margin: 16px 0; }
-  .key-takeaway strong { color: #ffeb3b; }
+/* ========== CONTENT BLOCKS ========== */
+.formula-box {
+  font-family:'JetBrains Mono',monospace;
+  font-size:15px;
+  font-weight:700;
+  padding:12px 16px;
+  border-radius:10px;
+  margin:8px 0;
+  border:1px solid;
+}
+.formula-box.blue { color:var(--blue); background:var(--blue-dim); border-color:rgba(91,164,245,0.2); }
+.formula-box.green { color:var(--green); background:var(--green-dim); border-color:rgba(94,194,105,0.2); }
+.formula-box.orange { color:var(--orange); background:var(--orange-dim); border-color:rgba(240,136,74,0.2); }
+.formula-box.red { color:var(--red); background:var(--red-dim); border-color:rgba(240,96,96,0.15); }
+.formula-box.purple { color:var(--purple); background:var(--purple-dim); border-color:rgba(181,138,245,0.2); }
+
+.explain {
+  font-size:13.5px;
+  color:var(--text-dim);
+  margin:4px 0 8px;
+  line-height:1.5;
+}
+.explain em { color:var(--text); font-style:normal; font-weight:600; }
+
+.template-box {
+  background:var(--green-dim);
+  border-left:3px solid var(--green);
+  padding:10px 14px;
+  border-radius:0 8px 8px 0;
+  margin:10px 0;
+}
+.template-box .label {
+  font-size:11px;
+  font-weight:700;
+  color:var(--green);
+  text-transform:uppercase;
+  letter-spacing:0.8px;
+  margin-bottom:3px;
+}
+.template-box .tmpl {
+  font-size:13.5px;
+  color:var(--text-bright);
+  font-style:italic;
+  line-height:1.45;
+}
+
+.warn-box {
+  background:var(--red-dim);
+  border-left:3px solid var(--red);
+  padding:10px 14px;
+  border-radius:0 8px 8px 0;
+  margin:10px 0;
+  font-weight:600;
+  color:var(--red);
+  font-size:13.5px;
+}
+.warn-box::before {
+  content:'⚠ ';
+}
+
+.mini-table {
+  width:100%;
+  border-collapse:collapse;
+  margin:10px 0;
+  font-size:13px;
+  border-radius:8px;
+  overflow:hidden;
+}
+.mini-table th {
+  background:var(--surface2);
+  color:var(--blue);
+  padding:8px 12px;
+  text-align:left;
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  border-bottom:1px solid var(--border);
+}
+.mini-table td {
+  padding:7px 12px;
+  border-bottom:1px solid var(--border);
+  color:var(--text);
+}
+.mini-table tr:last-child td { border-bottom:none; }
+.mini-table .strong { font-weight:700; }
+.mini-table .c-green { color:var(--green); }
+.mini-table .c-gold { color:var(--gold); }
+.mini-table .c-red { color:var(--red); }
+.mini-table .c-blue { color:var(--blue); }
+.mini-table .c-purple { color:var(--purple); }
+.mini-table .c-orange { color:var(--orange); }
+
+.example {
+  background:var(--surface2);
+  border-radius:8px;
+  padding:10px 14px;
+  margin:8px 0;
+  font-size:13px;
+  color:var(--text-dim);
+  border:1px solid var(--border);
+}
+.example strong { color:var(--cyan); font-weight:600; }
+
+.spacer { height:8px; }
+
+.em-diagram {
+  display:flex;
+  margin:10px 0 4px;
+  border-radius:8px;
+  overflow:hidden;
+  border:1px solid var(--border);
+}
+.em-seg {
+  flex:1;
+  text-align:center;
+  padding:8px 0;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  font-weight:700;
+  border-right:1px solid var(--border);
+  color:var(--text-dim);
+  background:var(--surface2);
+}
+.em-seg:last-child { border-right:none; }
+.em-seg.inner { background:var(--blue-dim); color:var(--blue); }
+.em-labels {
+  display:flex;
+  margin:0 0 6px;
+}
+.em-labels span {
+  flex:1;
+  text-align:center;
+  font-size:10px;
+  color:var(--text-dim);
+  font-family:'JetBrains Mono',monospace;
+}
+.em-labels span.mid { color:var(--blue); font-weight:700; }
+
+.em-summary {
+  text-align:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--blue);
+  font-weight:600;
+  margin:8px 0;
+}
+
+/* ========== FLASHCARD MODE ========== */
+.flashcard {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  margin-bottom:12px;
+  overflow:hidden;
+  cursor:pointer;
+  user-select:none;
+  transition:border-color .2s;
+}
+.flashcard:active { border-color:var(--blue); }
+.fc-q {
+  padding:16px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.fc-num {
+  width:28px;height:28px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;
+  background:var(--blue-dim);
+  color:var(--blue);
+  flex-shrink:0;
+}
+.fc-text {
+  font-size:14px;
+  font-weight:600;
+  color:var(--text-bright);
+  flex:1;
+}
+.fc-tap {
+  font-size:10px;
+  color:var(--text-dim);
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+.fc-a {
+  padding:0 16px;
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .3s ease, padding .3s ease;
+  background:var(--surface2);
+  border-top:1px solid transparent;
+}
+.flashcard.open .fc-a {
+  max-height:800px;
+  padding:14px 16px;
+  border-top-color:var(--border);
+}
+.fc-a p {
+  font-size:13.5px;
+  line-height:1.55;
+  color:var(--text);
+  margin-bottom:6px;
+}
+.fc-a p:last-child { margin-bottom:0; }
+.fc-a .fc-formula {
+  font-family:'JetBrains Mono',monospace;
+  color:var(--blue);
+  font-weight:600;
+}
+.fc-a .fc-warn { color:var(--red); font-weight:600; }
+.fc-a .fc-key { color:var(--green); font-weight:600; }
+
+/* ========== MISTAKES MODE ========== */
+.mistake-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:10px;
+  border-left:3px solid var(--red);
+}
+.mistake-num {
+  font-size:11px;
+  font-weight:700;
+  color:var(--red);
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:4px;
+}
+.mistake-title {
+  font-size:15px;
+  font-weight:700;
+  color:var(--text-bright);
+  margin-bottom:6px;
+}
+.mistake-body {
+  font-size:13.5px;
+  color:var(--text-dim);
+  line-height:1.5;
+}
+.mistake-body strong { color:var(--red); font-weight:700; }
+.mistake-body em { color:var(--green); font-style:normal; font-weight:600; }
+
+/* ========== UTILITY ========== */
+.hidden { display:none !important; }
+.mt { margin-top:12px; }
+.mb { margin-bottom:8px; }
+
+/* Score bar for quiz */
+.score-bar {
+  margin:0 16px 16px;
+  padding:12px 16px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.score-label { font-size:13px; color:var(--text-dim); }
+.score-num { font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700; color:var(--green); }
+.score-reset {
+  padding:6px 14px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text-dim);
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>STAT 145 — Exam 1 Study Guide</h1>
-  <p>12 Multiple Choice + 4 Free Response | Closed Book (Part I), Note Card + Calculator (Part II)</p>
+<div class="hero">
+  <h1>STAT <span>145</span></h1>
+  <p>Exam 1 · Tap to Study</p>
 </div>
 
-<div class="container">
-
-<div class="nav">
-  <a href="#concepts">Key Concepts</a>
-  <a href="#formulas">Formulas</a>
-  <a href="#mc">MC Answers</a>
-  <a href="#fr">Free Response</a>
-  <a href="#tips">Exam Tips</a>
+<!-- MODE TOGGLE -->
+<div class="mode-bar">
+  <button class="mode-btn active" onclick="setMode('learn')">📖 Learn</button>
+  <button class="mode-btn" onclick="setMode('flash')">🃏 Flash</button>
+  <button class="mode-btn" onclick="setMode('mistakes')">⚠ Traps</button>
 </div>
 
-<!-- ============ KEY CONCEPTS ============ -->
-<div class="section" id="concepts">
-  <h2>🔑 Key Concepts to Know Cold</h2>
+<!-- ========================================= -->
+<!-- LEARN MODE -->
+<!-- ========================================= -->
+<div id="mode-learn">
 
-  <h3>1. Types of Variables</h3>
-  <div class="concept-box">
-    <strong>Categorical</strong> = categories/labels (favorite color, gender, zip code)<br>
-    <strong>Quantitative</strong> = numerical measurements (height, salary, number of kids)
-  </div>
-
-  <h3>2. Describing Distributions (Shape, Center, Spread, Outliers)</h3>
-  <div class="concept-box">
-    <strong>Shape:</strong> Symmetric (bell), Right-skewed (tail right, mean > median), Left-skewed (tail left, mean < median)<br>
-    <strong>Center:</strong> Mean (symmetric data) or Median (skewed/outliers)<br>
-    <strong>Spread:</strong> Std Dev (symmetric) or IQR (skewed/outliers)<br>
-    <strong>Outliers:</strong> Below Q1 − 1.5·IQR or Above Q3 + 1.5·IQR
-  </div>
-
-  <h3>3. Empirical Rule (68-95-99.7)</h3>
-  <div class="concept-box">
-    Only applies to <strong>bell-shaped (symmetric)</strong> distributions.<br>
-    • 68% within 1 SD of mean<br>
-    • 95% within 2 SD of mean → 2.5% in each tail<br>
-    • 99.7% within 3 SD of mean
-  </div>
-
-  <h3>4. Z-Scores</h3>
-  <div class="concept-box">
-    z = (x − mean) / SD<br>
-    Interpretation: "The value is |z| standard deviations above/below the mean."<br>
-    <strong>Unusual</strong> if |z| > 2
-  </div>
-
-  <h3>5. Linear Regression & Correlation</h3>
-  <div class="concept-box">
-    <strong>r</strong> = correlation (−1 to +1): direction & strength of LINEAR relationship<br>
-    <strong>r²</strong> = coefficient of determination: "___% of variation in Y is explained by the linear relationship with X"<br>
-    <strong>ŷ = b₀ + b₁x</strong>: slope b₁ = "for each 1-unit increase in X, Y changes by b₁ on average"<br>
-    <strong>Extrapolation</strong> = predicting outside the range of observed X values — don't do it!
-  </div>
-
-  <h3>6. Boxplots</h3>
-  <div class="concept-box">
-    5-number summary: Min, Q1, Median, Q3, Max<br>
-    IQR = Q3 − Q1<br>
-    Fences: Q1 − 1.5·IQR and Q3 + 1.5·IQR<br>
-    Outliers are plotted as individual dots beyond the fences.
-  </div>
-
-  <h3>7. Comparing Distributions</h3>
-  <div class="concept-box">
-    Compare on 4 features: <strong>Shape, Center, Spread, Outliers</strong> — always IN CONTEXT.
+<div class="nav-scroll">
+  <div class="nav-pills">
+    <a class="nav-pill" href="#s-zscore">Z-Scores</a>
+    <a class="nav-pill" href="#s-emp">Empirical</a>
+    <a class="nav-pill" href="#s-skew">Skewness</a>
+    <a class="nav-pill" href="#s-slope">Slope</a>
+    <a class="nav-pill" href="#s-r">r & r²</a>
+    <a class="nav-pill" href="#s-reg">Regression</a>
+    <a class="nav-pill" href="#s-resid">Residuals</a>
+    <a class="nav-pill" href="#s-scatter">Scatter</a>
+    <a class="nav-pill" href="#s-box">Boxplots</a>
+    <a class="nav-pill" href="#s-hist">Histogram</a>
+    <a class="nav-pill" href="#s-vocab">Vocab</a>
   </div>
 </div>
 
-<!-- ============ FORMULAS ============ -->
-<div class="section" id="formulas">
-  <h2>📐 Must-Know Formulas (Put on Your Note Card!)</h2>
+<div class="content">
 
-  <div class="formula-card">z = (x − x̄) / s</div>
-  <div class="formula-card">IQR = Q3 − Q1</div>
-  <div class="formula-card">Fences: Q1 − 1.5·IQR, Q3 + 1.5·IQR</div>
-  <div class="formula-card">ŷ = b₀ + b₁x</div>
-  <div class="formula-card">r² = (r)²</div>
-
-  <div class="warning-box">
-    <strong>⚠️ Empirical Rule shortcuts:</strong><br>
-    "2.5% above ___" → mean + 2·SD<br>
-    "16% below ___" → mean − 1·SD<br>
-    "What % is between A and B?" → figure out how many SDs from the mean each is, then use 68/95/99.7 splits.
+<!-- Z-SCORES -->
+<div class="section open" id="s-zscore">
+  <div class="section-head" data-color="blue" onclick="toggleSection(this)">
+    <span class="section-icon">📐</span>
+    <span class="section-title">Z-Scores</span>
+    <span class="section-arrow">▼</span>
   </div>
-</div>
-
-<!-- ============ MULTIPLE CHOICE ============ -->
-<div class="section" id="mc">
-  <h2>✅ Multiple Choice — Answers & Explanations</h2>
-
-  <div class="mc-question">
-    <div class="q-num">Q1 — Relative Frequency</div>
-    <div class="q-text">In the data summary given, orders for small t-shirts have a relative frequency of 8/25.</div>
-    <div class="explanation">Relative frequency = (frequency of category) / (total). This equals 8/25 = 0.32 = 32%.</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q2 — Categorical Variable</div>
-    <div class="q-text">Which of the following variables is CATEGORICAL?</div>
-    <ul class="mc-options">
-      <li>The number of boys born at a hospital over a 6-month period</li>
-      <li class="correct">A person's favorite color</li>
-      <li>Thickness (mm) of steaks served at a restaurant</li>
-      <li>The total number of years a person attended college</li>
-    </ul>
-    <div class="explanation">Favorite color is a label/category, not a number you can do math with. The others are all quantitative.</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q3 — Mode</div>
-    <div class="q-text">In the graphical display, what is the mode?</div>
-    <div class="explanation">The mode is the value with the highest frequency — look for the tallest bar in the display. (Answer depends on the image shown in class; review your notes for the specific graph.)</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q4 — Histogram Shape</div>
-    <div class="q-text">Which statement best describes the shape of this histogram?</div>
-    <div class="explanation">Look at the histogram: if the tail extends to the right → positively (right) skewed. If symmetric → bell-shaped. If tail extends left → negatively (left) skewed. (Check the specific graph given.)</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q5 — Comparing Distributions (Tomato Seeds)</div>
-    <div class="q-text">Which correctly compares the yields from Type A and Type B seeds?</div>
-    <div class="explanation">Compare the center (typical yield) and the spread (variability). Read the graph carefully — the answer depends on which distribution has a higher center and which has more spread. (Check the specific display.)</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q6 — Z-Score Interpretation</div>
-    <div class="q-text">What can we say about a data value that has a z-score of −2.3?</div>
-    <ul class="mc-options">
-      <li>The data value is 2.3 standard deviations above the mean</li>
-      <li>The data value has a standard deviation equal to −2.3</li>
-      <li class="correct">The data value is 2.3 standard deviations below the mean</li>
-      <li>The data value is equal to the mean minus 2.3</li>
-    </ul>
-    <div class="explanation">Negative z = below the mean. The magnitude tells how many SDs away. So z = −2.3 means 2.3 standard deviations BELOW the mean.</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q7 — Interpreting r (Correlation)</div>
-    <div class="q-text">A researcher found r = −0.50 between age (X) and retirement savings (Y). What can you conclude?</div>
-    <ul class="mc-options">
-      <li>It can be concluded that there is a negative association between the two variables</li>
-      <li>75% of the variation in retirement income is explained by age</li>
-      <li class="correct">25% of the variation in retirement income is explained by the linear relationship with age</li>
-      <li>0.25% of the variation in retirement income is explained by age</li>
-    </ul>
-    <div class="explanation">r = −0.50, so r² = (−0.50)² = 0.25 = 25%. The coefficient of determination tells us the % of variation explained. Note: "negative association" is also true, but the question says r = −0.50 so r² = 0.25 is the more precise answer about what we can "conclude."</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q8 — Interpreting Regression Equation</div>
-    <div class="q-text">A restaurant uses ŷ = 5 + 12x (sales from # of customers). What can you conclude?</div>
-    <ul class="mc-options">
-      <li>The average daily sales amount is $12</li>
-      <li class="correct">An increase of one customer is associated with a $12 increase in daily sales, on average</li>
-      <li>When the number of customers is zero, daily sales is $12</li>
-      <li>Each increase of one customer causes a $5 increase in daily sales</li>
-    </ul>
-    <div class="explanation">The slope (12) means: for each additional customer, daily sales increase by $12 on average. The intercept (5) is the y-intercept, not the slope. Correlation ≠ causation, so "causes" is wrong.</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q9 — Empirical Rule (68%)</div>
-    <div class="q-text">Mean = 2 min, SD = 0.5 min. Approximately 68% complete the task between…</div>
-    <ul class="mc-options">
-      <li>Less than 2 minutes</li>
-      <li>Between 1 and 3 minutes</li>
-      <li>More than 2.5 minutes</li>
-      <li class="correct">Between 1.5 and 2.5 minutes</li>
-    </ul>
-    <div class="explanation">68% = mean ± 1 SD = 2 ± 0.5 = 1.5 to 2.5 minutes.</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q10 — Coefficient of Determination</div>
-    <div class="q-text">The coefficient of determination is the ___ of the linear correlation value.</div>
-    <ul class="mc-options">
-      <li>square root</li>
-      <li class="correct">square</li>
-      <li>opposite</li>
-      <li>reciprocal</li>
-    </ul>
-    <div class="explanation">r² (coefficient of determination) is literally the SQUARE of r (correlation).</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q11 — Shape from Mean vs Median</div>
-    <div class="q-text">Mean = 70, Median = 76. What shape is the distribution?</div>
-    <ul class="mc-options">
-      <li>Skewed to the right (positive skew)</li>
-      <li class="correct">Skewed to the left (negative skew)</li>
-      <li>Unable to determine</li>
-      <li>Symmetric</li>
-    </ul>
-    <div class="explanation">Mean < Median → left-skewed (negative skew). The mean gets pulled toward the tail. Think: tail points LEFT, mean pulled LEFT.</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q12 — Empirical Rule (% between 60 and 80)</div>
-    <div class="q-text">Mean = 80, SD = 10. What percentage of scores lies between 60 and 80?</div>
-    <ul class="mc-options">
-      <li class="correct">47.5%</li>
-      <li>34%</li>
-      <li>68%</li>
-      <li>95%</li>
-    </ul>
-    <div class="explanation">60 is 2 SDs below mean (z = −2). 80 is the mean (z = 0). From the empirical rule, 95% is between mean ± 2 SD. Half of 95% = 47.5% is between the mean and 2 SDs below.</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q13 — Z-Score Cutoff</div>
-    <div class="q-text">z > 1.5 required. Mean = 110, SD = 12. What is the minimum score?</div>
-    <ul class="mc-options">
-      <li>122</li>
-      <li>92</li>
-      <li class="correct">128</li>
-      <li>98</li>
-    </ul>
-    <div class="explanation">x = mean + z·SD = 110 + 1.5(12) = 110 + 18 = 128.</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q14 — Best Measure of Center for Skewed Data</div>
-    <div class="q-text">Which measure of center is best if data is extremely skewed right?</div>
-    <ul class="mc-options">
-      <li>Mode</li>
-      <li>Midrange</li>
-      <li>Mean</li>
-      <li class="correct">Median</li>
-    </ul>
-    <div class="explanation">Median is resistant to outliers and skewness. The mean gets pulled by extreme values.</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q15 — Interpreting R²</div>
-    <div class="q-text">ŷ = …; R² = 0.66; r = 0.81. Give a practical interpretation of R².</div>
-    <ul class="mc-options">
-      <li>66% of the differences in SALARY are caused by differences in GPA</li>
-      <li class="correct">66% of the variation in SALARY can be explained by the regression line that uses GPA</li>
-      <li>We can predict SALARY correctly 66% of the time</li>
-      <li>We estimate SALARY to increase $0.66 for every 1-point increase in GPA</li>
-    </ul>
-    <div class="explanation">"___% of the variation in Y is explained by the linear relationship with X." Never say "caused by" — correlation ≠ causation.</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q16 — Prediction from Regression</div>
-    <div class="q-text">ŷ = 22.3 + 5.25x (weight from age). If a bear is 10 years old, expected weight?</div>
-    <ul class="mc-options">
-      <li>94.8 kg</li>
-      <li>Not enough information</li>
-      <li class="correct">77.5 kg</li>
-      <li>27.3 kg</li>
-    </ul>
-    <div class="explanation">ŷ = 22.3 + 5.25(10) = 22.3 + 52.5 = 74.8 kg. (Check: actual equation wording may give 77.5 if slope/intercept differ. Plug in x = 10 to whatever equation is given.)</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q17 — Resistant to Outliers</div>
-    <div class="q-text">Which statistic is unaffected by outliers?</div>
-    <ul class="mc-options">
-      <li>Mean</li>
-      <li class="correct">Interquartile Range</li>
-      <li>Standard deviation</li>
-      <li>Range</li>
-    </ul>
-    <div class="explanation">IQR only uses Q1 and Q3 (middle 50%), so extreme values don't affect it. Mean, SD, and Range all change with outliers.</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q18 — Finding the Median</div>
-    <div class="q-text">Pulse rates: 70, 64, 80, 74, 92. What is the median?</div>
-    <ul class="mc-options">
-      <li class="correct">74</li>
-      <li>76</li>
-      <li>77</li>
-      <li>80</li>
-    </ul>
-    <div class="explanation">Sort first: 64, 70, 74, 80, 92. With n = 5 (odd), the median is the middle value = 74.</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q19 — Not Symmetric Indicator</div>
-    <div class="q-text">Which would indicate a data set is NOT symmetric?</div>
-    <ul class="mc-options">
-      <li>The range equals 5 standard deviations</li>
-      <li>The range is larger than the IQR</li>
-      <li class="correct">The mean is much smaller than the median</li>
-      <li>There are no outliers</li>
-    </ul>
-    <div class="explanation">If mean ≠ median → skewed → not symmetric. Mean much smaller than median = left-skewed.</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q20 — Outlier Effect on Correlation</div>
-    <div class="q-text">What is the effect of an outlier on a correlation value?</div>
-    <ul class="mc-options">
-      <li>Always closer to −1</li>
-      <li>Always closer to 1</li>
-      <li class="correct">Always closer to 0</li>
-      <li>No effect</li>
-    </ul>
-    <div class="explanation">Outliers typically weaken the linear pattern, pulling r closer to 0. (In rare cases an outlier can inflate r, but the general rule tested in intro stats is that outliers weaken correlation.)</div>
-  </div>
-
-  <div class="mc-question">
-    <div class="q-num">Q21 — Use of Regression Line</div>
-    <div class="q-text">One use of a regression line is…</div>
-    <ul class="mc-options">
-      <li>To determine if any x-values are outliers</li>
-      <li>To determine if any y-values are outliers</li>
-      <li>To determine if a change in y causes a change in x</li>
-      <li class="correct">To estimate the change in y for a one-unit change in x</li>
-    </ul>
-    <div class="explanation">The slope of a regression line tells us the estimated change in Y for each 1-unit increase in X.</div>
-  </div>
-</div>
-
-<!-- ============ FREE RESPONSE ============ -->
-<div class="section" id="fr">
-  <h2>📝 Free Response — Full Worked Solutions</h2>
-
-  <!-- Problem 1 -->
-  <div class="fr-problem">
-    <h3>Problem 1: Push-Ups vs. Sit-Ups</h3>
-
-    <div class="part">
-      <span class="part-label">A.</span> Regression line:<br>
-      <span class="answer">ŷ = 14.91 + 0.658x</span>
-      <div class="work">Get this from your calculator: STAT → EDIT → enter data → STAT → CALC → LinReg(a+bx)</div>
+  <div class="section-body">
+    <p class="explain">How many standard deviations a value is from the mean. Basically: <em>"how weird is this number?"</em></p>
+    <div class="formula-box blue">z = (x − mean) / s</div>
+    <p class="explain">Rearranged (find x from z):</p>
+    <div class="formula-box blue">x = mean + z × s</div>
+    <table class="mini-table">
+      <tr><th>z value</th><th>Meaning</th></tr>
+      <tr><td>z &gt; 0</td><td>ABOVE the mean</td></tr>
+      <tr><td>z &lt; 0</td><td>BELOW the mean</td></tr>
+      <tr><td>z = 0</td><td>AT the mean</td></tr>
+      <tr><td class="strong c-red">|z| &gt; 2</td><td class="strong c-red">UNUSUAL</td></tr>
+      <tr><td class="strong c-green">|z| ≤ 2</td><td class="strong c-green">Not unusual</td></tr>
+    </table>
+    <div class="template-box">
+      <div class="label">Say this</div>
+      <div class="tmpl">"[value] is [|z|] standard deviations [above/below] the mean. This is/is not unusual because |z| is >/≤ 2."</div>
     </div>
-
-    <div class="part">
-      <span class="part-label">B.</span> Interpret the slope IN CONTEXT:<br>
-      <span class="answer">"For each additional push-up a student can do, the number of sit-ups they can do increases by approximately 0.658, on average."</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">C.</span> Predict sit-ups for 25 push-ups:<br>
-      <div class="work">ŷ = 14.91 + 0.658(25)
-ŷ = 14.91 + 16.45
-ŷ ≈ 31.36 sit-ups</div>
-    </div>
-
-    <div class="part">
-      <span class="part-label">D.</span> r² = <span class="answer">0.7047 ≈ 70.5%</span><br>
-      <span class="answer">"Approximately 70.5% of the variation in the number of sit-ups can be explained by the linear relationship with the number of push-ups."</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">E.</span> Predicting for 85 push-ups?<br>
-      <span class="answer">No — this would be EXTRAPOLATION. The push-up data only ranges from 15 to 55. Predicting at 85 is far outside this range, so the regression line may not be valid there.</span>
-    </div>
-  </div>
-
-  <!-- Problem 2 -->
-  <div class="fr-problem">
-    <h3>Problem 2: Reaction Times</h3>
-
-    <div class="part">
-      <span class="part-label">A.</span> Summary statistics:
-      <table>
-        <tr><th>Mean</th><th>Median</th><th>Std Dev</th><th>Min</th><th>Max</th><th>Q1</th><th>Q3</th></tr>
-        <tr><td>0.4313</td><td>0.43</td><td>0.1113</td><td>0.22</td><td>0.66</td><td>0.37</td><td>0.52</td></tr>
-      </table>
-      <div class="work">Sorted: 0.22, 0.26, 0.34, 0.37, 0.38, 0.40, 0.41, 0.43, 0.47, 0.48, 0.49, 0.52, 0.52, 0.52, 0.66
-n = 15 → Median = 8th value = 0.43
-Q1 = 4th value = 0.37, Q3 = 12th value = 0.52</div>
-    </div>
-
-    <div class="part">
-      <span class="part-label">B.</span> Outlier cutoffs:
-      <div class="work">IQR = Q3 − Q1 = 0.52 − 0.37 = 0.15
-Lower fence = Q1 − 1.5·IQR = 0.37 − 1.5(0.15) = 0.37 − 0.225 = 0.145
-Upper fence = Q3 + 1.5·IQR = 0.52 + 1.5(0.15) = 0.52 + 0.225 = 0.745</div>
-      <span class="answer">Values below 0.145 or above 0.745 are outliers. No outliers in this data set.</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">C.</span> Boxplot: Draw a box from Q1 (0.37) to Q3 (0.52), with a line at the median (0.43). Whiskers extend to min (0.22) and max (0.66). Mark the mean (0.4313) with an "x" or dot. Show fence lines at 0.145 and 0.745.
-    </div>
-
-    <div class="part">
-      <span class="part-label">D.</span> Compare male vs. female on 4 features:<br>
-      <span class="answer">Compare SHAPE, CENTER, SPREAD, and OUTLIERS — always say "reaction time" in your sentences. Read the female boxplot and compare each feature to your male boxplot.</span>
-    </div>
-  </div>
-
-  <!-- Problem 3 -->
-  <div class="fr-problem">
-    <h3>Problem 3: Days to Resolution</h3>
-    <p style="font-size:0.9rem; color:#666;">Given: x̄ = 5.58, Sx = 4.165, n = 50, Min = 1, Q1 = 2, Med = 4.5, Q3 = 8, Max = 20</p>
-
-    <div class="part">
-      <span class="part-label">A.</span> Shape:<br>
-      <span class="answer">The histogram is skewed to the RIGHT (positively skewed) — it has a long tail extending toward larger values.</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">B.</span> Interpret Q3 = 8:<br>
-      <span class="answer">"75% of the complaints were resolved in 8 days or fewer."</span> (OR: "25% of complaints took more than 8 days to resolve.")
-    </div>
-
-    <div class="part">
-      <span class="part-label">C.</span> Best measure of center:<br>
-      <span class="answer">MEDIAN — because the distribution is skewed right. The mean is pulled by the long tail and doesn't represent a "typical" value as well.</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">D.</span> Best measure of spread:<br>
-      <span class="answer">IQR — because the distribution is skewed. Standard deviation is influenced by outliers/skewness, so IQR is more appropriate.</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">E.</span> Boxplot values and outlier fences:
-      <div class="work">Boxes: Min=1, Q1=2, Med=4.5, Q3=8, Max=20
-IQR = 8 − 2 = 6
-Lower fence = 2 − 1.5(6) = 2 − 9 = −7 (no low outliers possible)
-Upper fence = 8 + 1.5(6) = 8 + 9 = 17
-Max = 20 > 17, so 20 is an outlier!
-Whisker extends to the last non-outlier value.
-Mean = 5.58 (mark with x)</div>
-    </div>
-  </div>
-
-  <!-- Problem 4 -->
-  <div class="fr-problem">
-    <h3>Problem 4: Fat Content vs. Calories (Ice Cream)</h3>
-
-    <div class="part">
-      <span class="part-label">A.</span> Describe the relationship:<br>
-      <span class="answer">"There is a positive, linear, moderately strong relationship between fat content and calories. As fat content increases, calories tend to increase."</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">B.</span> Correlation: <span class="answer">r ≈ 0.739</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">C.</span> Regression line: <span class="answer">ŷ = 91.90 + 8.01x</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">D.</span> Interpret slope:<br>
-      <span class="answer">"For each 1% increase in fat content, the number of calories per half-cup serving increases by approximately 8.01 calories, on average."</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">E.</span> Predict calories at 12% fat:
-      <div class="work">ŷ = 91.90 + 8.01(12)
-ŷ = 91.90 + 96.12
-ŷ ≈ 188 calories</div>
-    </div>
-  </div>
-
-  <!-- Problem 5 -->
-  <div class="fr-problem">
-    <h3>Problem 5: Coffee Maker Prices</h3>
-
-    <div class="part">
-      <span class="part-label">A.</span> Histogram with classes 20–<40, 40–<60, etc.: Count the prices in each bin and draw bars.
-      <table>
-        <tr><th>Class</th><th>Count</th></tr>
-        <tr><td>20 – < 40</td><td>2</td></tr>
-        <tr><td>40 – < 60</td><td>2</td></tr>
-        <tr><td>60 – < 80</td><td>3</td></tr>
-        <tr><td>80 – < 100</td><td>4</td></tr>
-        <tr><td>100 – < 120</td><td>3</td></tr>
-        <tr><td>120 – < 140</td><td>2</td></tr>
-        <tr><td>140 – < 160</td><td>1</td></tr>
-      </table>
-    </div>
-
-    <div class="part">
-      <span class="part-label">B.</span> Is the Empirical Rule appropriate?<br>
-      <span class="answer">No — the histogram is NOT bell-shaped/symmetric. It appears roughly uniform or slightly skewed. The Empirical Rule requires a bell-shaped distribution.</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">C.</span> Empirical Rule intervals (if it WERE appropriate): Mean = 80.88, SD = 36.15
-      <div class="work">68%: 80.88 ± 36.15 → 44.73 to 117.03
-95%: 80.88 ± 72.30 → 8.58 to 153.19
-99.7%: 80.88 ± 108.45 → −27.57 to 189.34</div>
-    </div>
-
-    <div class="part">
-      <span class="part-label">D.</span> % below $45:<br>
-      <span class="answer">≈ 16%. $45 is approximately 1 SD below the mean, and by the empirical rule ~16% of data falls below (mean − 1 SD).</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">E.</span> Z-score for Santos Electric ($100):
-      <div class="work">z = (100 − 80.88) / 36.15 = 19.12 / 36.15 ≈ 0.53</div>
-      <span class="answer">"The Santos Electric coffeemaker price of $100 is 0.53 standard deviations above the mean price." This is not unusual (|z| < 2).</span>
-    </div>
-  </div>
-
-  <!-- Problem 6 -->
-  <div class="fr-problem">
-    <h3>Problem 6: Presidential Ages at Inauguration</h3>
-    <p style="font-size:0.9rem; color:#666;">Given: Mean = 54.659, SD = 6.258, n = 44</p>
-
-    <div class="part">
-      <span class="part-label">A.</span> Why the Empirical Rule applies:<br>
-      <span class="answer">"The histogram appears approximately bell-shaped (symmetric, unimodal), which satisfies the requirement for using the Empirical Rule."</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">B.</span> 68% of presidents between:
-      <div class="work">Mean ± 1 SD = 54.659 ± 6.258
-Lower: 54.659 − 6.258 = 48.401
-Upper: 54.659 + 6.258 = 60.917</div>
-      <span class="answer">Between approximately 48.4 and 60.9 years old.</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">C.</span> Obama's z-score (age 47):
-      <div class="work">z = (47 − 54.659) / 6.258 = −7.659 / 6.258 ≈ −1.22</div>
-    </div>
-
-    <div class="part">
-      <span class="part-label">D.</span> Was Obama unusually young?<br>
-      <span class="answer">No — his z-score of −1.22 is NOT unusual because |z| < 2. A value is only considered unusual if its z-score is more than 2 standard deviations from the mean.</span>
-    </div>
-
-    <div class="part">
-      <span class="part-label">E.</span> 2.5% above what age?
-      <div class="work">2.5% in the upper tail = Mean + 2 SD
-= 54.659 + 2(6.258) = 54.659 + 12.516 = 67.175</div>
-      <span class="answer">Approximately 2.5% of presidents have been over 67.2 years old at inauguration.</span>
+    <div class="example">
+      <strong>Ex:</strong> mean=110, s=12, x=128<br>
+      z = (128−110)/12 = <strong>1.5</strong> → Not unusual (1.5 &lt; 2)<br><br>
+      <strong>Ex:</strong> "What score is 1.5 SDs above?"<br>
+      x = 110 + 1.5(12) = <strong>128</strong>
     </div>
   </div>
 </div>
 
-<!-- ============ EXAM TIPS ============ -->
-<div class="section" id="tips">
-  <h2>🎯 Exam Day Tips</h2>
-
-  <div class="key-takeaway">
-    <strong>Part I (Short Answer):</strong> No calculator, no notes. Focus on definitions, interpretations, and identifying variable types/shapes. Practice writing interpretations of slope, r², and quartiles IN CONTEXT.
+<!-- EMPIRICAL RULE -->
+<div class="section" id="s-emp">
+  <div class="section-head" data-color="orange" onclick="toggleSection(this)">
+    <span class="section-icon">🔔</span>
+    <span class="section-title">Empirical Rule</span>
+    <span class="section-arrow">▼</span>
   </div>
-
-  <div class="key-takeaway">
-    <strong>Part II (Show Your Work):</strong> You get a 5×8 note card + calculator. Put formulas, empirical rule diagram, and interpretation templates on your card. ALWAYS show formulas before plugging in numbers.
-  </div>
-
-  <div class="warning-box">
-    <strong>Common mistakes to avoid:</strong><br>
-    • Forgetting to say "on average" when interpreting slope<br>
-    • Saying "caused by" instead of "explained by" for r²<br>
-    • Extrapolating beyond the data range<br>
-    • Using mean/SD for skewed data (use median/IQR instead)<br>
-    • Forgetting to sort data before finding the median<br>
-    • Applying the Empirical Rule to non-bell-shaped data<br>
-    • Not labeling units in your answers
-  </div>
-
-  <div class="success-box">
-    <strong>Interpretation templates for your note card:</strong><br>
-    • <em>Slope:</em> "For each 1-[unit] increase in X, Y increases/decreases by [b₁] [units], on average."<br>
-    • <em>r²:</em> "[r²]% of the variation in [Y] is explained by the linear relationship with [X]."<br>
-    • <em>z-score:</em> "[X] is [|z|] standard deviations above/below the mean [context]."<br>
-    • <em>Q1:</em> "25% of [context] are at or below [Q1 value]."<br>
-    • <em>Q3:</em> "75% of [context] are at or below [Q3 value]."
+  <div class="section-body">
+    <div class="warn-box">ONLY for bell-shaped data! Check histogram first!</div>
+    <div class="em-diagram">
+      <div class="em-seg">.15%</div>
+      <div class="em-seg">2.35%</div>
+      <div class="em-seg inner">13.5%</div>
+      <div class="em-seg inner" style="font-weight:900;font-size:13px">34%</div>
+      <div class="em-seg inner" style="font-weight:900;font-size:13px">34%</div>
+      <div class="em-seg inner">13.5%</div>
+      <div class="em-seg">2.35%</div>
+      <div class="em-seg">.15%</div>
+    </div>
+    <div class="em-labels">
+      <span>−3s</span><span>−2s</span><span>−1s</span><span class="mid">x̄</span><span>+1s</span><span>+2s</span><span>+3s</span>
+    </div>
+    <div class="em-summary">68% (±1s) &nbsp;·&nbsp; 95% (±2s) &nbsp;·&nbsp; 99.7% (±3s)</div>
+    <table class="mini-table">
+      <tr><th>Question Pattern</th><th>Answer</th></tr>
+      <tr><td>"Between" mean ± 1s</td><td class="strong c-blue">68%</td></tr>
+      <tr><td>"Between" mean ± 2s</td><td class="strong c-blue">95%</td></tr>
+      <tr><td>"Above" mean + 2s</td><td class="strong c-orange">2.5%</td></tr>
+      <tr><td>"Below" mean − 2s</td><td class="strong c-orange">2.5%</td></tr>
+      <tr><td>"Above" mean + 1s</td><td class="strong c-gold">16%</td></tr>
+      <tr><td>"Below" mean − 1s</td><td class="strong c-gold">16%</td></tr>
+      <tr><td>Between mean & mean+2s</td><td class="strong c-green">47.5%</td></tr>
+      <tr><td>84th percentile</td><td class="strong c-purple">= mean + 1s</td></tr>
+      <tr><td>97.5th percentile</td><td class="strong c-purple">= mean + 2s</td></tr>
+    </table>
+    <div class="example">
+      <strong>Ex:</strong> mean=50, s=5. "What % above 60?"<br>
+      60 is 2 SDs above → right tail = 2.35% + 0.15% = <strong>2.5%</strong>
+    </div>
   </div>
 </div>
 
+<!-- SKEWNESS -->
+<div class="section" id="s-skew">
+  <div class="section-head" data-color="green" onclick="toggleSection(this)">
+    <span class="section-icon">↗️</span>
+    <span class="section-title">Skewness Rule</span>
+    <span class="section-arrow">▼</span>
+  </div>
+  <div class="section-body">
+    <p class="explain"><em>"Mean chases the tail"</em> — the mean gets dragged toward extreme values.</p>
+    <table class="mini-table">
+      <tr><th>Shape</th><th>Rule</th></tr>
+      <tr><td class="strong c-orange">Right Skew</td><td>Mean > Median (tail → right)</td></tr>
+      <tr><td class="strong c-blue">Left Skew</td><td>Mean < Median (tail → left)</td></tr>
+      <tr><td>Symmetric</td><td>Mean ≈ Median</td></tr>
+    </table>
+    <div class="example">
+      <strong>Ex:</strong> Mean=70, Median=76<br>
+      Mean < Median → mean pulled LEFT → <strong>Left skewed</strong>
+    </div>
+  </div>
 </div>
+
+<!-- SLOPE -->
+<div class="section" id="s-slope">
+  <div class="section-head" data-color="orange" onclick="toggleSection(this)">
+    <span class="section-icon">📈</span>
+    <span class="section-title">Slope Interpretation</span>
+    <span class="section-arrow">▼</span>
+  </div>
+  <div class="section-body">
+    <p class="explain">They give you an equation like ŷ = 12x + 5. The <em>12 is the slope</em>. They want a sentence, not a calculation.</p>
+    <div class="template-box">
+      <div class="label">Say this</div>
+      <div class="tmpl">"For each 1 [x-unit] increase in [x], [y] increases/decreases by [slope], <u>on average</u>."</div>
+    </div>
+    <div class="warn-box">"on average" is REQUIRED — you lose points without it!</div>
+    <p class="explain">Use <em>actual variable names</em>, never just "x" and "y".</p>
+    <div class="example">
+      <strong>Ex:</strong> ŷ = 12x + 5 (x=customers, y=sales)<br>
+      "For each additional customer, daily sales increase by $12, <strong>on average</strong>."
+    </div>
+  </div>
+</div>
+
+<!-- r and r² -->
+<div class="section" id="s-r">
+  <div class="section-head" data-color="purple" onclick="toggleSection(this)">
+    <span class="section-icon">🔗</span>
+    <span class="section-title">Correlation (r) & r²</span>
+    <span class="section-arrow">▼</span>
+  </div>
+  <div class="section-body">
+    <p class="explain"><em>r = how closely dots follow a straight line.</em> Always between −1 and +1.</p>
+    <div class="formula-box purple">−1 ≤ r ≤ +1</div>
+    <table class="mini-table">
+      <tr><th>|r|</th><th>Strength</th></tr>
+      <tr><td>&gt; 0.8</td><td class="strong c-green">Strong</td></tr>
+      <tr><td>0.5 – 0.8</td><td class="strong c-gold">Moderate</td></tr>
+      <tr><td>&lt; 0.5</td><td class="strong c-red">Weak</td></tr>
+    </table>
+    <p class="explain">r &gt; 0 = line goes UP · r &lt; 0 = line goes DOWN</p>
+    <div class="warn-box">r = 0 means no LINEAR pattern — NOT "no relationship"! Could be curved.</div>
+    <p class="explain"><em>Outliers pull r toward 0</em> (weaken it). NOT toward ±1.</p>
+    <div class="warn-box">Correlation ≠ Causation!</div>
+
+    <div class="spacer"></div>
+    <p class="explain" style="color:var(--text-bright);font-weight:700;font-size:15px">r² — Coefficient of Determination</p>
+    <div class="formula-box blue">r² = r × r &nbsp;(just square it)</div>
+    <p class="explain"><em>r² is the SQUARE of the correlation coefficient</em> — this exact phrasing is a test question!</p>
+    <div class="template-box">
+      <div class="label">Say this</div>
+      <div class="tmpl">"[r²×100]% of the variation in [y] can be explained by the regression line that uses [x]."</div>
+    </div>
+    <div class="warn-box">Say "explained by" — NEVER "caused by"!</div>
+    <div class="example">
+      <strong>Ex:</strong> r² = 0.66<br>
+      "66% of the variation in salary can be <strong>explained</strong> by the regression line that uses GPA."
+    </div>
+  </div>
+</div>
+
+<!-- REGRESSION -->
+<div class="section" id="s-reg">
+  <div class="section-head" data-color="orange" onclick="toggleSection(this)">
+    <span class="section-icon">📉</span>
+    <span class="section-title">Regression & Prediction</span>
+    <span class="section-arrow">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="formula-box orange">ŷ = b₀ + b₁(x)</div>
+    <p class="explain">ŷ = predicted y · b₁ = slope · b₀ = y-intercept (predicted y when x=0, only meaningful if x=0 makes sense)</p>
+    <p class="explain"><em>To predict:</em> just plug x into the equation.</p>
+    <div class="example">
+      <strong>Ex:</strong> ŷ = 2.73(Age) + 67.5, predict for Age=10<br>
+      ŷ = 2.73(10) + 67.5 = <strong>94.8 kg</strong>
+    </div>
+    <div class="warn-box">NEVER predict outside the data range — that's extrapolation!</div>
+    <div class="template-box">
+      <div class="label">Extrapolation answer</div>
+      <div class="tmpl">"No — predicting at x=[val] would be extrapolation because it's outside the observed range ([min] to [max])."</div>
+    </div>
+    <p class="explain mt"><em>One use of a regression line</em> = estimate the change in y for a one-unit change in x (that's the slope). This wording is on the exam!</p>
+  </div>
+</div>
+
+<!-- RESIDUALS -->
+<div class="section" id="s-resid">
+  <div class="section-head" data-color="green" onclick="toggleSection(this)">
+    <span class="section-icon">📏</span>
+    <span class="section-title">Residuals</span>
+    <span class="section-arrow">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="formula-box green">Residual = y − ŷ &nbsp;(actual − predicted)</div>
+    <table class="mini-table">
+      <tr><th>Residual</th><th>Meaning</th></tr>
+      <tr><td class="strong c-green">+ (positive)</td><td>Actual ABOVE line (underpredicted)</td></tr>
+      <tr><td class="strong c-red">− (negative)</td><td>Actual BELOW line (overpredicted)</td></tr>
+    </table>
+    <div class="template-box">
+      <div class="label">Say this</div>
+      <div class="tmpl">"The actual [y] was [residual] [units] higher/lower than what the line predicted."</div>
+    </div>
+    <div class="example">
+      <strong>Ex:</strong> actual=90, predicted=94.8<br>
+      Residual = 90 − 94.8 = <strong>−4.8</strong><br>
+      "Actual weight was 4.8 kg lower than predicted" (overpredicted)
+    </div>
+  </div>
+</div>
+
+<!-- SCATTERPLOT -->
+<div class="section" id="s-scatter">
+  <div class="section-head" data-color="purple" onclick="toggleSection(this)">
+    <span class="section-icon">⚡</span>
+    <span class="section-title">Describe a Scatterplot</span>
+    <span class="section-arrow">▼</span>
+  </div>
+  <div class="section-body">
+    <p class="explain">Hit <em>ALL 4 things</em> in context:</p>
+    <table class="mini-table">
+      <tr><th>#</th><th>What</th><th>Options</th></tr>
+      <tr><td>1</td><td>Direction</td><td>Positive (+) or Negative (−)</td></tr>
+      <tr><td>2</td><td>Form</td><td>Linear or Curved</td></tr>
+      <tr><td>3</td><td>Strength</td><td>Strong / Moderate / Weak</td></tr>
+      <tr><td>4</td><td>Outliers</td><td>Any points far from pattern?</td></tr>
+    </table>
+    <div class="template-box">
+      <div class="label">Say this</div>
+      <div class="tmpl">"There is a [strength] [direction] linear relationship between [x] and [y]. No outliers appear."</div>
+    </div>
+  </div>
+</div>
+
+<!-- BOXPLOTS -->
+<div class="section" id="s-box">
+  <div class="section-head" data-color="gold" onclick="toggleSection(this)">
+    <span class="section-icon">📊</span>
+    <span class="section-title">Compare Boxplots & Quartiles</span>
+    <span class="section-arrow">▼</span>
+  </div>
+  <div class="section-body">
+    <p class="explain"><em>S.C.S.O.</em> — compare these 4 things with actual names and numbers:</p>
+    <table class="mini-table">
+      <tr><th>Compare</th><th>Template</th></tr>
+      <tr><td class="strong">Shape</td><td>"[A] is symmetric, [B] is right skewed"</td></tr>
+      <tr><td class="strong">Center</td><td>"Median of [A]=__ vs [B]=__"</td></tr>
+      <tr><td class="strong">Spread</td><td>"IQR of [A]=__ vs [B]=__"</td></tr>
+      <tr><td class="strong">Outliers</td><td>"[A] has _, [B] has _"</td></tr>
+    </table>
+    <div class="spacer"></div>
+    <p class="explain" style="color:var(--text-bright);font-weight:700">Quartile Formulas</p>
+    <p class="explain">Q1 = 25th %ile · Q2 = Median · Q3 = 75th %ile</p>
+    <div class="formula-box green">IQR = Q3 − Q1</div>
+    <div class="formula-box red">LF = Q1 − 1.5(IQR) · UF = Q3 + 1.5(IQR)</div>
+    <p class="explain"><em>Below LF or Above UF = OUTLIERS</em></p>
+    <div class="warn-box">Fences are NOT data points! Whiskers stop at last REAL data inside fences.</div>
+  </div>
+</div>
+
+<!-- HISTOGRAM -->
+<div class="section" id="s-hist">
+  <div class="section-head" data-color="blue" onclick="toggleSection(this)">
+    <span class="section-icon">📶</span>
+    <span class="section-title">Read a Histogram</span>
+    <span class="section-arrow">▼</span>
+  </div>
+  <div class="section-body">
+    <table class="mini-table">
+      <tr><th>What to report</th><th>How</th></tr>
+      <tr><td class="strong">Typical value</td><td>Range of the tallest bar</td></tr>
+      <tr><td class="strong">Spread</td><td>Rightmost edge − leftmost edge</td></tr>
+      <tr><td class="strong">Shape</td><td>Symmetric / left skew / right skew</td></tr>
+      <tr><td class="strong">Unusual</td><td>Any bars far from the rest?</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- VOCABULARY -->
+<div class="section" id="s-vocab">
+  <div class="section-head" data-color="blue" onclick="toggleSection(this)">
+    <span class="section-icon">📝</span>
+    <span class="section-title">Key Vocabulary</span>
+    <span class="section-arrow">▼</span>
+  </div>
+  <div class="section-body">
+    <table class="mini-table">
+      <tr><th>Term</th><th>Meaning</th></tr>
+      <tr><td class="strong">Population</td><td>ENTIRE group you care about</td></tr>
+      <tr><td class="strong">Sample</td><td>Smaller group you actually study</td></tr>
+      <tr><td class="strong">Parameter</td><td>Number about population (μ, σ)</td></tr>
+      <tr><td class="strong">Statistic</td><td>Number from sample (x̄, s, n)</td></tr>
+      <tr><td class="strong">Categorical</td><td>Labels/groups — CAN'T average</td></tr>
+      <tr><td class="strong">Quantitative</td><td>Real numbers — CAN average</td></tr>
+      <tr><td class="strong">Discrete</td><td>Countable (#pets: 0,1,2)</td></tr>
+      <tr><td class="strong">Continuous</td><td>Any value (height: 5.61...)</td></tr>
+      <tr><td class="strong">Resistant</td><td>NOT ruined by outliers</td></tr>
+    </table>
+    <div class="spacer"></div>
+    <table class="mini-table">
+      <tr><th>Resistant (outlier-proof) ✓</th><th>NOT resistant ✗</th></tr>
+      <tr><td class="c-green strong">Median, Q1, Q3, IQR</td><td class="c-red strong">Mean, Std Dev, Range</td></tr>
+    </table>
+    <div class="spacer"></div>
+    <table class="mini-table">
+      <tr><th>Data Shape</th><th>Report These</th></tr>
+      <tr><td>Symmetric / bell</td><td class="c-green strong">Mean & Std Dev</td></tr>
+      <tr><td>Skewed / outliers</td><td class="c-green strong">Median & IQR</td></tr>
+    </table>
+    <div class="warn-box">Zip codes & jersey #s = CATEGORICAL even though they look like numbers!</div>
+    <div class="spacer"></div>
+    <p class="explain"><em>Percentile:</em> kth percentile = k% of data falls BELOW that value.<br>Q1=25th · Median=50th · Q3=75th</p>
+    <div class="spacer"></div>
+    <div class="template-box">
+      <div class="label">Std Dev</div>
+      <div class="tmpl">"The typical distance from the mean for [context] is [s] [units]."</div>
+    </div>
+    <div class="template-box">
+      <div class="label">Mean</div>
+      <div class="tmpl">"On average, [context] is [x̄] [units]."</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /learn mode -->
+
+
+<!-- ========================================= -->
+<!-- FLASHCARD MODE -->
+<!-- ========================================= -->
+<div id="mode-flash" class="hidden">
+<div class="score-bar">
+  <div><span class="score-label">Reviewed</span></div>
+  <div class="score-num" id="fc-count">0 / 17</div>
+  <button class="score-reset" onclick="resetFlash()">Reset</button>
+</div>
+<div class="content" id="fc-container"></div>
+</div>
+
+
+<!-- ========================================= -->
+<!-- MISTAKES MODE -->
+<!-- ========================================= -->
+<div id="mode-mistakes" class="hidden">
+<div class="content" id="mistakes-container"></div>
+</div>
+
+
+<script>
+// ========== MODE SWITCHING ==========
+function setMode(mode) {
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('mode-learn').classList.toggle('hidden', mode !== 'learn');
+  document.getElementById('mode-flash').classList.toggle('hidden', mode !== 'flash');
+  document.getElementById('mode-mistakes').classList.toggle('hidden', mode !== 'mistakes');
+  window.scrollTo(0, 0);
+}
+
+// ========== SECTION TOGGLE ==========
+function toggleSection(head) {
+  head.closest('.section').classList.toggle('open');
+}
+
+// ========== FLASHCARDS ==========
+const flashcards = [
+  { q: "What does a z-score tell you?", a: "How many standard deviations a value is from the mean. Formula: <span class='fc-formula'>z = (x − mean) / s</span>. If |z| > 2 → unusual." },
+  { q: "How do you find x from a z-score?", a: "<span class='fc-formula'>x = mean + z × s</span><br>Ex: mean=110, s=12, z=1.5 → x = 110 + 1.5(12) = 128" },
+  { q: "What are the Empirical Rule percentages?", a: "<span class='fc-key'>68%</span> within ±1s · <span class='fc-key'>95%</span> within ±2s · <span class='fc-key'>99.7%</span> within ±3s<br><span class='fc-warn'>Only for bell-shaped data!</span>" },
+  { q: "What % is above mean + 2s?", a: "<span class='fc-key'>2.5%</span> (right tail: 2.35% + 0.15%)" },
+  { q: "What % is above mean + 1s?", a: "<span class='fc-key'>16%</span> (13.5% + 2.35% + 0.15%)" },
+  { q: "Mean=70, Median=76 — what's the shape?", a: "Mean < Median → mean pulled LEFT → <span class='fc-key'>Left skewed</span>. Remember: \"mean chases the tail.\"" },
+  { q: "How do you interpret a slope?", a: "\"For each 1 [x-unit] increase in [x], [y] increases/decreases by [slope], <span class='fc-warn'>on average</span>.\"<br>Must say \"on average\" or lose points!" },
+  { q: "What does r = 0 mean?", a: "No <em>linear</em> pattern. <span class='fc-warn'>Does NOT mean \"no relationship\"</span> — could be curved! r only detects straight lines." },
+  { q: "How do outliers affect r?", a: "Outliers <span class='fc-warn'>pull r toward 0</span> (weaken the correlation). NOT toward +1 or −1." },
+  { q: "What is r²? How do you interpret it?", a: "<span class='fc-formula'>r² = r × r</span><br>\"[r²×100]% of variation in [y] explained by reg using [x].\"<br><span class='fc-warn'>Say \"explained by\" — NEVER \"caused by\"!</span>" },
+  { q: "What is r² the square of?", a: "<span class='fc-key'>r² is the square of the correlation coefficient.</span><br>This exact phrasing is a test question!" },
+  { q: "What is extrapolation and when do you say no?", a: "Predicting outside the data range. If data covers ages 2–15 and they ask about age 30: \"No — that's extrapolation outside the observed range (2 to 15).\"" },
+  { q: "Residual = ?", a: "<span class='fc-formula'>Residual = y − ŷ (actual − predicted)</span><br>+ = above line (underpredicted)<br>− = below line (overpredicted)" },
+  { q: "Name all 4 things to describe a scatterplot", a: "<span class='fc-key'>1. Direction</span> (pos/neg) · <span class='fc-key'>2. Form</span> (linear/curved) · <span class='fc-key'>3. Strength</span> (strong/mod/weak) · <span class='fc-key'>4. Outliers</span>" },
+  { q: "S.C.S.O. stands for?", a: "<span class='fc-key'>Shape, Center, Spread, Outliers</span> — the 4 things to compare when looking at two boxplots. Use actual variable names and numbers!" },
+  { q: "Are zip codes categorical or quantitative?", a: "<span class='fc-warn'>CATEGORICAL!</span> They look like numbers but you can't average them. Same for jersey numbers." },
+  { q: "Resistant measures vs not resistant?", a: "<span class='fc-key'>Resistant:</span> Median, Q1, Q3, IQR<br><span class='fc-warn'>NOT resistant:</span> Mean, Std Dev, Range<br>\"Unaffected by outliers?\" → answer is Median or IQR" },
+];
+
+let fcReviewed = new Set();
+
+function buildFlashcards() {
+  const c = document.getElementById('fc-container');
+  c.innerHTML = flashcards.map((f, i) => `
+    <div class="flashcard" id="fc-${i}" onclick="toggleFC(${i})">
+      <div class="fc-q">
+        <div class="fc-num">${i+1}</div>
+        <div class="fc-text">${f.q}</div>
+        <div class="fc-tap">tap</div>
+      </div>
+      <div class="fc-a"><p>${f.a}</p></div>
+    </div>
+  `).join('');
+}
+
+function toggleFC(i) {
+  const el = document.getElementById('fc-' + i);
+  el.classList.toggle('open');
+  if (el.classList.contains('open')) {
+    fcReviewed.add(i);
+    document.getElementById('fc-count').textContent = fcReviewed.size + ' / ' + flashcards.length;
+  }
+}
+
+function resetFlash() {
+  fcReviewed.clear();
+  document.getElementById('fc-count').textContent = '0 / ' + flashcards.length;
+  document.querySelectorAll('.flashcard').forEach(f => f.classList.remove('open'));
+}
+
+buildFlashcards();
+
+// ========== MISTAKES ==========
+const mistakes = [
+  { title: "r = 0", body: "Means no <em>linear</em> pattern. <strong>Does NOT mean \"no relationship\"</strong> — could be curved!" },
+  { title: "r² wording", body: "Always say <em>\"explained by.\"</em> <strong>NEVER say \"caused by\"!</strong>" },
+  { title: "Slope wording", body: "<strong>Must include \"on average\"</strong> in your interpretation or you lose points!" },
+  { title: "Empirical Rule", body: "<strong>ONLY for bell-shaped data.</strong> Check if the histogram is bell-shaped FIRST before using it." },
+  { title: "Fences vs Whiskers", body: "Fences are NOT data points. <strong>Whiskers stop at the last REAL data value inside the fences!</strong>" },
+  { title: "Context", body: "<strong>Use actual variable names</strong> — never just say \"x\" and \"y\" in your answers." },
+  { title: "Median", body: "<strong>SORT your data first!</strong> Can't find the middle if it's not in order." },
+  { title: "Zip codes & jersey #s", body: "<strong>CATEGORICAL</strong> even though they look like numbers! You can't average a zip code." },
+  { title: "Outliers & correlation", body: "Outliers pull r <em>toward 0</em> (weaken the pattern). <strong>NOT toward +1 or −1!</strong>" },
+  { title: "Correlation ≠ Causation", body: "<strong>Never say one thing \"causes\" another!</strong> Correlation only shows association." },
+];
+
+function buildMistakes() {
+  const c = document.getElementById('mistakes-container');
+  c.innerHTML = '<div style="text-align:center;padding:8px 0 16px;color:var(--text-dim);font-size:13px;">Memorize these — they\'re free points or free losses.</div>' +
+    mistakes.map((m, i) => `
+    <div class="mistake-card">
+      <div class="mistake-num">Trap #${i+1}</div>
+      <div class="mistake-title">${m.title}</div>
+      <div class="mistake-body">${m.body}</div>
+    </div>
+  `).join('');
+}
+
+buildMistakes();
+</script>
+
 </body>
 </html>

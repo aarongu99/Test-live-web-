@@ -262,11 +262,14 @@
         @media(max-width:768px){.problem-stats{grid-template-columns:1fr}.audience-grid{grid-template-columns:1fr}}
         @media(max-width:768px){
             nav{padding:10px 16px}nav.scrolled{padding:8px 16px}
-            .nav-links a:not(.nav-cta){display:none}
+            .nav-links{gap:16px}
+            .nav-links a:not(.nav-cta){display:inline;font-size:10px;letter-spacing:1.2px}
             .nav-pill{top:16px;right:16px;width:48px;height:48px}
             .nav-pill .pill-butterfly{width:28px}
             .nav-pill:hover{padding:12px 20px 12px 16px}
-            .nav-pill:hover .pill-menu a:not(.pill-cta){display:none}
+            .nav-pill:hover .pill-menu a:not(.pill-cta){display:inline;font-size:10px;letter-spacing:1px}
+            .nav-pill:hover{padding:12px 16px 12px 12px}
+            .nav-pill:hover .pill-menu{gap:14px}
             .hero{padding:0 24px}.hero h1{letter-spacing:-1px}
             .problem,.audience,.status,.cta{padding:80px 16px}
             .mission{padding:90px 24px}

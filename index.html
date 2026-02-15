@@ -262,14 +262,9 @@
         @media(max-width:768px){.problem-stats{grid-template-columns:1fr}.audience-grid{grid-template-columns:1fr}}
         @media(max-width:768px){
             nav{padding:10px 16px}nav.scrolled{padding:8px 16px}
-            .nav-links{gap:16px}
-            .nav-links a:not(.nav-cta){display:inline;font-size:10px;letter-spacing:1.2px}
             .nav-pill{top:16px;right:16px;width:48px;height:48px}
             .nav-pill .pill-butterfly{width:28px}
             .nav-pill:hover{padding:12px 20px 12px 16px}
-            .nav-pill:hover .pill-menu a:not(.pill-cta){display:inline;font-size:10px;letter-spacing:1px}
-            .nav-pill:hover{padding:12px 16px 12px 12px}
-            .nav-pill:hover .pill-menu{gap:14px}
             .hero{padding:0 24px}.hero h1{letter-spacing:-1px}
             .problem,.audience,.status,.cta{padding:80px 16px}
             .mission{padding:90px 24px}
@@ -293,6 +288,9 @@
             .problem h2{max-width:100%}
             .problem h2{margin-bottom:32px}
             .problem h2 u{text-underline-offset:6px !important;text-decoration-thickness:3px !important}
+            nav{display:none}
+            .nav-pill{opacity:1;transform:scale(1);pointer-events:auto}
+            .nav-pill .pill-menu a:not(.pill-cta){display:inline}
         }
         @media(max-width:480px){
             .hero-ctas{flex-direction:column;align-items:stretch}

@@ -656,18 +656,40 @@ document.querySelectorAll('.stat-card').forEach(function(card) {
     });
 });
 
-// Interest form -> mailto
+// Interest form -> Formspree
 function sendInterest() {
-    var name = document.getElementById('formName').value.trim();
-    var email = document.getElementById('formEmail').value.trim();
-    var role = document.getElementById('formRole').value;
-    if (!name || !email) {
-        alert('Please fill in your name and email.');
+    var nameEl = document.getElementById('formName');
+    var emailEl = document.getElementById('formEmail');
+    var roleEl = document.getElementById('formRole');
+    var btn = document.querySelector('.form-btn');
+    var name = nameEl.value.trim();
+    var email = emailEl.value.trim();
+    var role = roleEl.value;
+    if (!name || !email || !role) {
+        alert('Please fill in your name, email, and select a role.');
         return;
     }
-    var subject = encodeURIComponent('Interest in SutureSight - ' + role);
-    var body = encodeURIComponent('Hi SutureSight team,\n\nMy name is ' + name + ' and I\'m reaching out because I\'m interested in SutureSight as a ' + role + '.\n\nYou can reach me at: ' + email + '\n\nLooking forward to connecting!');
-    window.location.href = 'mailto:suturesight@gmail.com?subject=' + subject + '&body=' + body;
+    btn.disabled = true;
+    btn.textContent = 'SENDING...';
+    fetch('https://formspree.io/f/xqedqvwr', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        body: JSON.stringify({name: name, email: email, role: role})
+    }).then(function(res) {
+        if (!res.ok) throw new Error('fail');
+        nameEl.value = '';
+        emailEl.value = '';
+        roleEl.selectedIndex = 0;
+        var form = document.querySelector('.interest-form');
+        var saved = form.innerHTML;
+        form.innerHTML = '<p style="text-align:center;color:var(--light);font-size:18px;padding:40px 0">Thanks! We\u2019ll be in touch.</p>';
+        setTimeout(function() { form.innerHTML = saved; }, 4000);
+    }).catch(function() {
+        alert('Something went wrong. Email us directly at suturesight@gmail.com');
+    }).finally(function() {
+        btn.disabled = false;
+        btn.textContent = 'Send';
+    });
 }
 
 // Magnetic buttons

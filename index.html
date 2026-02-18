@@ -743,7 +743,7 @@ function closeEconGate(){
 function checkEconCode(){
  var code=document.getElementById('econCodeInput').value.trim().toLowerCase();
  if(code===ECON_ACCESS_CODE){
-  window.location.href='/econ/';
+  window.location.href='econ.html';
  } else {
   document.getElementById('econError').textContent='Invalid code. Try again.';
   document.getElementById('econCodeInput').value='';

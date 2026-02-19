@@ -341,7 +341,6 @@
         <a href="#problem"><span class="hide-mobile">The </span>Problem</a>
         <a href="#mission">Mission</a>
         <a href="#contact" class="nav-cta">Contact</a>
-        <a href="javascript:void(0)" onclick="openEconGate()" class="nav-cta" style="margin-left:4px">Econ</a>
     </div>
 </nav>
 
@@ -351,7 +350,6 @@
         <a href="#problem">The Problem</a>
         <a href="#mission">Mission</a>
         <a href="#contact" class="pill-cta">Contact</a>
-        <a href="javascript:void(0)" onclick="openEconGate()" class="pill-cta" style="margin-left:4px">Econ</a>
     </div>
 </div>
 
@@ -711,48 +709,6 @@ document.querySelectorAll('.btn-p,.btn-g,.nav-cta,.soc-btn,.form-btn').forEach(f
 
 // Trigger animations
 document.body.classList.add('anim-ready');
-</script>
-
-<!-- Econ Access Gate Modal -->
-<div id="MISModal" style="display:none;position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center">
- <div style="background:#0d1a1a;border:1px solid rgba(45,212,191,.2);border-radius:16px;padding:40px 36px;max-width:360px;width:90%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.5)">
-  <div style="font-size:14px;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px">Enter Access Code</div>
-  <input id="econCodeInput" type="password" placeholder="Code" style="width:100%;padding:14px 18px;border-radius:8px;border:1px solid rgba(45,212,191,.2);background:rgba(255,255,255,.06);color:#fff;font-size:16px;font-family:inherit;text-align:center;letter-spacing:4px;outline:none;transition:border-color .3s" onfocus="this.style.borderColor='rgba(45,212,191,.5)'" onblur="this.style.borderColor='rgba(45,212,191,.2)'" onkeydown="if(event.key==='Enter')checkEconCode()">
-  <div id="econError" style="color:#ef4444;font-size:13px;margin-top:10px;min-height:20px"></div>
-  <div style="display:flex;gap:10px;margin-top:16px">
-   <button onclick="closeEconGate()" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.5);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;letter-spacing:1px;text-transform:uppercase;transition:all .3s">Cancel</button>
-   <button onclick="checkEconCode()" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(45,212,191,.3);background:rgba(45,212,191,.12);color:#2DD4BF;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;letter-spacing:1px;text-transform:uppercase;transition:all .3s">Enter</button>
-  </div>
- </div>
-</div>
-<script>
-// ===== ECON ACCESS CODE — Change this to update the password =====
-var ECON_ACCESS_CODE = 'Aaron';
-// =================================================================
-
-function openEconGate(){
- var m=document.getElementById('econModal');
- m.style.display='flex';
- document.getElementById('econError').textContent='';
- document.getElementById('econCodeInput').value='';
- setTimeout(function(){document.getElementById('econCodeInput').focus()},100);
-}
-function closeEconGate(){
- document.getElementById('econModal').style.display='none';
-}
-function checkEconCode(){
- var code=document.getElementById('econCodeInput').value.trim().toLowerCase();
- if(code===ECON_ACCESS_CODE){
-  window.location.href='econ.html';
- } else {
-  document.getElementById('econError').textContent='Invalid code. Try again.';
-  document.getElementById('econCodeInput').value='';
-  document.getElementById('econCodeInput').focus();
- }
-}
-document.getElementById('econModal').addEventListener('click',function(e){
- if(e.target===this) closeEconGate();
-});
 </script>
 </body>
 </html>

@@ -99,6 +99,19 @@
         .nav-links a:not(.nav-cta):hover::after{width:100%}
         .nav-cta{background:rgba(45,212,191,.12)!important;color:var(--light)!important;padding:10px 24px!important;border-radius:6px!important;border:1px solid rgba(45,212,191,.2)!important;font-weight:600!important;font-size:11px!important;letter-spacing:1.5px!important;transition:all .4s cubic-bezier(.22,1,.36,1)!important}
         .nav-cta:hover{background:var(--light)!important;color:var(--deep)!important;border-color:var(--light)!important;transform:translateY(-2px)!important;box-shadow:0 8px 28px rgba(45,212,191,.25)!important}
+        .acct-overlay{position:fixed;inset:0;z-index:99999;background:rgba(6,30,30,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:none;align-items:center;justify-content:center}
+        .acct-overlay.open{display:flex}
+        .acct-modal{background:#0d1a1a;border:1px solid rgba(45,212,191,.15);border-radius:16px;padding:40px;max-width:360px;width:90%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.5);position:relative}
+        .acct-modal h3{font-family:'Playfair Display',serif;color:#fff;font-size:22px;margin-bottom:6px}
+        .acct-modal p{color:rgba(255,255,255,.4);font-size:13px;margin-bottom:24px}
+        .acct-modal input{width:100%;padding:12px 16px;background:rgba(255,255,255,.06);border:1px solid rgba(45,212,191,.15);border-radius:8px;color:#fff;font-size:15px;text-align:center;letter-spacing:2px;outline:none;transition:border-color .3s}
+        .acct-modal input:focus{border-color:var(--light)}
+        .acct-modal input.shake{animation:modalShake .4s ease}
+        .acct-modal .acct-go{margin-top:16px;padding:10px 32px;background:rgba(45,212,191,.12);color:var(--light);border:1px solid rgba(45,212,191,.2);border-radius:8px;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .3s}
+        .acct-modal .acct-go:hover{background:var(--light);color:var(--deep)}
+        .acct-modal .acct-x{position:absolute;top:14px;right:18px;color:rgba(255,255,255,.3);font-size:22px;cursor:pointer;background:none;border:none;transition:color .3s}
+        .acct-modal .acct-x:hover{color:#fff}
+        @keyframes modalShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
 
         /* ===== HERO ===== */
         .hero{min-height:100vh;min-height:100svh;background:var(--deep);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 48px;position:relative;overflow:hidden}
@@ -341,6 +354,7 @@
         <a href="#problem"><span class="hide-mobile">The </span>Problem</a>
         <a href="#mission">Mission</a>
         <a href="#contact" class="nav-cta">Contact</a>
+        <a href="#" class="nav-cta" onclick="openAcctModal();return false;">ACCT</a>
     </div>
 </nav>
 
@@ -350,6 +364,19 @@
         <a href="#problem">The Problem</a>
         <a href="#mission">Mission</a>
         <a href="#contact" class="pill-cta">Contact</a>
+        <a href="#" class="pill-cta" onclick="openAcctModal();return false;">ACCT</a>
+    </div>
+</div>
+
+
+<!-- ACCT Password Modal -->
+<div class="acct-overlay" id="acctOverlay" onclick="if(event.target===this)closeAcctModal()">
+    <div class="acct-modal">
+        <button class="acct-x" onclick="closeAcctModal()">&times;</button>
+        <h3>Study Guide</h3>
+        <p>Enter password to continue</p>
+        <input type="password" id="acctPwd" placeholder="Password" onkeydown="if(event.key==='Enter')checkAcctPwd()">
+        <br><button class="acct-go" onclick="checkAcctPwd()">Enter</button>
     </div>
 </div>
 
@@ -535,9 +562,9 @@
         </div>
 
         <div class="c-stack reveal stagger-3">
-            <a href="mailto:suturesight@gmail.com" class="c-card">
+            <a href="/cdn-cgi/l/email-protection#61121415141304120806091521060c00080d4f020e0c" class="c-card">
                 <div class="c-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg></div>
-                <div class="c-txt"><div class="lbl">Email</div><div class="val">suturesight@gmail.com</div></div>
+                <div class="c-txt"><div class="lbl">Email</div><div class="val"><span class="__cf_email__" data-cfemail="fc8f8988898e998f959b9488bc9b919d9590d29f9391">[email&#160;protected]</span></div></div>
             </a>
             <a href="tel:+18582801975" class="c-card">
                 <div class="c-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
@@ -567,7 +594,7 @@
     </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // Enable animations (content visible without JS)
 document.documentElement.classList.add('anim-ready');
 
@@ -701,7 +728,8 @@ document.querySelectorAll('.btn-p,.btn-g,.nav-cta,.soc-btn,.form-btn').forEach(f
         var r = btn.getBoundingClientRect();
         var x = e.clientX - r.left - r.width/2;
         var y = e.clientY - r.top - r.height/2;
-        btn.style.transform = 'translate('+x*0.15+'px,'+y*0.15+'px)';    });
+        btn.style.transform = 'translate('+x*0.15+'px,'+y*0.15+'px)';
+    });
     btn.addEventListener('mouseleave', function() {
         btn.style.transform = '';
     });
@@ -709,6 +737,32 @@ document.querySelectorAll('.btn-p,.btn-g,.nav-cta,.soc-btn,.form-btn').forEach(f
 
 // Trigger animations
 document.body.classList.add('anim-ready');
+</script>
+
+<script>
+function openAcctModal() {
+    document.getElementById('acctOverlay').classList.add('open');
+    setTimeout(function() { document.getElementById('acctPwd').focus(); }, 100);
+}
+function closeAcctModal() {
+    document.getElementById('acctOverlay').classList.remove('open');
+    document.getElementById('acctPwd').value = '';
+    document.getElementById('acctPwd').style.borderColor = '';
+}
+function checkAcctPwd() {
+    var inp = document.getElementById('acctPwd');
+    if (inp.value.toLowerCase().trim() === 'money') {
+        closeAcctModal();
+        window.open('accounting-study-guide.html', '_blank');
+    } else {
+        inp.classList.add('shake');
+        inp.style.borderColor = '#f87171';
+        setTimeout(function() { inp.classList.remove('shake'); inp.style.borderColor = ''; }, 500);
+        inp.value = '';
+        inp.focus();
+    }
+}
+
 </script>
 </body>
 </html>

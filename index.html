@@ -561,16 +561,7 @@
             </div>
         </div>
 
-        <div class="c-stack reveal stagger-3">
-            <a href="/cdn-cgi/l/email-protection#61121415141304120806091521060c00080d4f020e0c" class="c-card">
-                <div class="c-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg></div>
-                <div class="c-txt"><div class="lbl">Email</div><div class="val"><span class="__cf_email__" data-cfemail="fc8f8988898e998f959b9488bc9b919d9590d29f9391">[email&#160;protected]</span></div></div>
-            </a>
-            <a href="tel:+18582801975" class="c-card">
-                <div class="c-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
-                <div class="c-txt"><div class="lbl">Phone</div><div class="val">(858) 280-1975</div></div>
-            </a>
-        </div>
+
 
         <div class="soc-row reveal stagger-4">
             <a href="https://www.linkedin.com/company/suturesight" target="_blank" rel="noopener" class="soc-btn" aria-label="LinkedIn">
@@ -715,7 +706,7 @@ function sendInterest() {
         form.innerHTML = '<p style="text-align:center;color:var(--light);font-size:18px;padding:40px 0">Thanks! We\u2019ll be in touch.</p>';
         setTimeout(function() { form.innerHTML = saved; }, 4000);
     }).catch(function() {
-        alert('Something went wrong. Email us directly at suturesight@gmail.com');
+        alert('Something went wrong. Please try again later.');
     }).finally(function() {
         btn.disabled = false;
         btn.textContent = 'Send';
